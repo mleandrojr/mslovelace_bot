@@ -97,8 +97,7 @@ export async function createAndGetChat(chat: Chat): Promise<chats> {
         where: { chat_id: chat.getId() },
         update: {
             title: chat.getTitle(),
-            type: chat.getType(),
-            language: "en"
+            type: chat.getType()
         },
         create: {
             chat_id: chat.getId(),

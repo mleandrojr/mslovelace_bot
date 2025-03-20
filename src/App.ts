@@ -40,7 +40,7 @@ export default class App {
      *
      * @var {number}
      */
-    private readonly port: number;
+    private port: number;
 
     /**
      * Registered commands.
@@ -108,8 +108,14 @@ export default class App {
      * @return {void}
      */
     public listen(): void {
+
         this.expressApp.listen(this.port, () => {
             Log.warn(`Listening on port ${this.port}`);
+
+        }).on("error", (err) => {
+            Log.error(`Port ${this.port} is already in use. Trying to use another port...`);
+            this.port++;
+            this.listen();
         });
     }
 
