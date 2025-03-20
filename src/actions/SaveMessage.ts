@@ -52,6 +52,11 @@ export default class SaveMessage extends Action {
         }
 
         const userAndChat = await getUserAndChatByTelegramId(contextUser.getId(), this.context.getChat()!.getId());
+        if (!userAndChat) {
+            Log.save("SaveMessage :: User and Chat not found " + JSON.stringify(this.context.getPayload()));
+            return Promise.resolve();
+        }
+
         const data = {
             user_id: userAndChat!.users.id,
             chat_id: userAndChat!.chats.id,
@@ -133,7 +138,7 @@ export default class SaveMessage extends Action {
         caption && (data["caption"] = caption);
 
         const captionEntities = message.getCaptionEntities();
-        captionEntities && (data["captionEntities"] = JSON.stringify(captionEntities));
+        captionEntities && (data["caption_entities"] = JSON.stringify(captionEntities));
 
         const contact = message.getContact();
         contact && (data["contact"] = JSON.stringify(contact));

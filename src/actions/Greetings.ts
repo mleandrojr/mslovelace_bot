@@ -124,6 +124,7 @@ export default class Greetings extends Action {
 
         const message = await this.context.getChat()?.sendMessage(text, options);
         const messagePayload = message.getPayload();
+        Log.save(messagePayload);
         this.insertMessage(messagePayload);
     }
 
