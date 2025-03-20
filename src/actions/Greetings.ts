@@ -81,6 +81,7 @@ export default class Greetings extends Action {
             return Promise.resolve();
         }
 
+        console.log(this.userAndChat.chats.language);
         Lang.set(this.userAndChat.chats.language || "en");
         this.greetings();
     }
