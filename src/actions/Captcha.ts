@@ -117,7 +117,7 @@ export default class Captcha extends Action {
                 return Promise.resolve();
             }
 
-            await approveOnChat(relUserChat.id, relUserChat.id);
+            await approveOnChat(relUserChat.users.id, relUserChat.chats.id);
             await this.addPermissions(relUserChat.chats);
 
             if (relUserChat.chats.chat_configs?.restrict_new_users) {

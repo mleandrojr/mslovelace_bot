@@ -131,7 +131,7 @@ export default class TelegramBotApi {
         }
 
         const url = `${this.endpoint}/bot${TelegramBotApi.token}/${this.method}`;
-        const body = JSON.stringify(payload) || "";
+        const body = JSON.stringify(payload, (_, v) => typeof v === 'bigint' ? v.toString() : v) || "";
 
         const headers = {
             "Content-Type" : "application/json",
