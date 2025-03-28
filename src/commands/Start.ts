@@ -18,7 +18,7 @@ import { BotCommand } from "libraries/telegram/types/BotCommand";
 import { InlineKeyboardButton } from "libraries/telegram/types/InlineKeyboardButton";
 import { InlineKeyboardMarkup } from "libraries/telegram/types/InlineKeyboardMarkup";
 import { getChatByTelegramId } from "services/Chats";
-import { getUserAndChatByTelegramId } from "services/UsersAndChats";
+import { getUserAndChatByTelegramId, getUserAndChatByPendingCaptcha } from "services/UsersAndChats";
 import { PrismaClient } from "@prisma/client";
 
 export default class Start extends Command {
@@ -72,9 +72,9 @@ export default class Start extends Command {
             return Promise.resolve();
         }
 
-        const params = command.getParams() ?? [];
+        let params = command.getParams() ?? [];
         if (!params.length) {
-            this.sendStartMessage();
+            params = await this.checkUserPendingCaptcha();
         }
 
         for (const param of params) {
@@ -83,6 +83,34 @@ export default class Start extends Command {
                 return Promise.resolve();
             }
         }
+
+        this.sendStartMessage();
+    }
+
+    /**
+     * Checkjs the user's pending captcha.
+     *
+     * @author Marcos Leandro
+     * @since  2025-03-28
+     *
+     * @return {Promise<string[]>}
+     */
+    private async checkUserPendingCaptcha(): Promise<string[]> {
+
+        const userId = this.context?.getUser()?.getId();
+        if (!userId) {
+            return [];
+        }
+
+        const row = await getUserAndChatByPendingCaptcha(userId);
+        if (!row) {
+            return [];
+        }
+
+        const params = [];
+        params.push(`captcha_${row.chats.chat_id}_${row.chats.language}`);
+
+        return params;
     }
 
     /**

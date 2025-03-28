@@ -59,6 +59,47 @@ export async function getUserAndChatByTelegramId(telegramUserId: number, telegra
 }
 
 /**
+ * Returns the user and chat data by pending captcha.
+ *
+ * @author Marcos Leandro
+ * @since  2025-03-25
+ *
+ * @param telegramUserId
+ *
+ * @return User and Chat object.
+ */
+export async function getUserAndChatByPendingCaptcha(telegramUserId: number): Promise<RelUserAndChatType|null> {
+
+    const user = await getUserByTelegramId(telegramUserId);
+    const result = await prisma.rel_users_chats.findFirst({
+        where: {
+            user_id: user?.id,
+            joined: true,
+            checked: false,
+        },
+        include: {
+            users: true,
+            chats: {
+                include: {
+                    chat_configs: true
+                }
+            },
+        }
+
+    }).then(async (response) => {
+        return response;
+
+    }).catch(async (e: Error) => {
+        throw e;
+
+    }).finally(() => {
+        prisma.$disconnect();
+    });
+
+    return result as RelUserAndChatType ?? null;
+}
+
+/**
  * Joins the user in chat.
  *
  * @author Marcos Leandro
