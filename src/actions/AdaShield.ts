@@ -66,7 +66,12 @@ export default class AdaShield extends Action {
             .replace(/{userid}/g, userId.toString())
             .replace(/{username}/g, username ?? "");
 
-        this.context.getChat()?.sendMessage(lang, { parse_mode : "HTML" });
+        this.context.getChat()?.sendMessage(lang, {
+            parse_mode : "HTML",
+            link_preview_options : {
+                is_disabled : true
+            }
+        });
     }
 
     /**
