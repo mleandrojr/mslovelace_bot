@@ -81,7 +81,6 @@ export default class Greetings extends Action {
             return Promise.resolve();
         }
 
-        console.log(this.userAndChat.chats.language);
         Lang.set(this.userAndChat.chats.language || "en");
         this.greetings();
     }
@@ -176,7 +175,7 @@ export default class Greetings extends Action {
         };
 
         const timestamp = Math.floor(Date.now() / 1000);
-        const timeout = timestamp + ((this.userAndChat?.chats.chat_configs?.captcha_ban_seconds ?? 60));
+        const timeout = timestamp + ((this.userAndChat?.chats.chat_configs?.captcha_ban_seconds ?? 300));
 
         const additionalData: AdditionalDataType = {
             ttl: timeout

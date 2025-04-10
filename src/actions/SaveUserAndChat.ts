@@ -13,7 +13,7 @@ import Action from "./Action";
 import Chat from "contexts/Chat";
 import Context from "contexts/Context";
 import Log from "helpers/Log";
-import { createAndGetChat } from "services/Chats";
+import { getChatById, createAndGetChat } from "services/Chats";
 import { createAndGetUser } from "services/Users";
 import User from "contexts/User";
 import { chats, users, PrismaClient } from "@prisma/client";
@@ -43,7 +43,8 @@ export default class SaveUserAndChat extends Action {
         try {
 
             const user = await this.getUser(this.getContextUser());
-            const chat = await this.getChat(this.context.getChat());
+            const newChat = await this.getChat(this.context.getChat());
+            const chat = await getChatById(newChat.id);
 
             const prisma = new PrismaClient();
             await prisma.rel_users_chats.upsert({
@@ -57,6 +58,7 @@ export default class SaveUserAndChat extends Action {
                     user_id: user.id,
                     chat_id: chat.id,
                     joined: true,
+                    checked: !chat.captcha,
                     date: Math.floor(Date.now() / 1000),
                     last_seen: Math.floor(Date.now() / 1000)
                 },

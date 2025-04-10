@@ -81,7 +81,7 @@ export default class Command {
      * @returns {string}
      */
     public getCommand(): string {
-        return this.command;
+        return this.command.replace(`@${process.env.TELEGRAM_USERNAME}`, "").trim();
     }
 
     /**
