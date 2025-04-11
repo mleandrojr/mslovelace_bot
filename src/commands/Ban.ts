@@ -72,7 +72,6 @@ export default class Ban extends Command {
             return Promise.resolve();
         }
 
-        this.command = command;
         this.context.getMessage()?.delete();
 
         let params = command.getParams() || [];

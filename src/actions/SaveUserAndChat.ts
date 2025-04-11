@@ -46,6 +46,10 @@ export default class SaveUserAndChat extends Action {
             const newChat = await this.getChat(this.context.getChat());
             const chat = await getChatById(newChat.id);
 
+            if (!user || !chat) {
+                return Promise.reject(new Error("User or chat not found."));
+            }
+
             const prisma = new PrismaClient();
             await prisma.rel_users_chats.upsert({
                 where: {
@@ -58,7 +62,7 @@ export default class SaveUserAndChat extends Action {
                     user_id: user.id,
                     chat_id: chat.id,
                     joined: true,
-                    checked: !chat.captcha,
+                    checked: !chat.chat_configs.captcha,
                     date: Math.floor(Date.now() / 1000),
                     last_seen: Math.floor(Date.now() / 1000)
                 },

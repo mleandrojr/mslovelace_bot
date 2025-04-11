@@ -44,6 +44,7 @@ export default {
     emptyGreetingsMessage: "Não existe uma mensagem de boas-vindas configurada.",
     greetingsMessageDemo: "A mensagem de saudação atual é:\n\n{greetings}",
     userApproved: "Conta <a href=\"tg://user?id={userid}\">{username}</a> aprovada.",
+    userLink: "tg://user?id={userid}",
     pongMessage: "Esta sou eu!",
     packageName: "📜 <code>{name}</code>",
     packageVersion: "📂 <code>{version}</code>",
