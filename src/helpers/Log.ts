@@ -319,7 +319,7 @@ export default class Log {
         const directory = path.resolve();
         const filename = `${year}-${month}-${day}.log`;
 
-        let log = `${hours}:${minutes}:${seconds} :: ${content}\n`;
+        let log = `${hours}:${minutes}:${seconds} :: ${content}\n\n`;
         if (stack) {
             log += `${stack}\n`;
         }
