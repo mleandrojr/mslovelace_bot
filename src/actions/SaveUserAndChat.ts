@@ -62,7 +62,7 @@ export default class SaveUserAndChat extends Action {
                     user_id: user.id,
                     chat_id: chat.id,
                     joined: true,
-                    checked: !chat.chat_configs.captcha,
+                    checked: !(chat?.chat_configs?.captcha ?? false),
                     date: Math.floor(Date.now() / 1000),
                     last_seen: Math.floor(Date.now() / 1000)
                 },

@@ -13,6 +13,7 @@ import Action from "./Action";
 import ContextFactory from "contexts/ContextFactory";
 import Context from "contexts/Context";
 import Lang from "helpers/Lang";
+import SaveUserAndChat from "./SaveUserAndChat";
 import SaveMessage from "./SaveMessage";
 import { AdditionalData as AdditionalDataType } from "types/AdditionalData";
 import { InlineKeyboardButton } from "libraries/telegram/types/InlineKeyboardButton";
@@ -166,7 +167,7 @@ export default class Greetings extends Action {
      *
      * @param payload
      */
-    private insertMessage(payload: MessageType): void {
+    private async insertMessage(payload: MessageType): Promise<void> {
 
         const update: UpdateType = {
             update_id: 0,
@@ -184,6 +185,9 @@ export default class Greetings extends Action {
         if (!context) {
             return;
         }
+
+        const saveUserAndChat = new SaveUserAndChat(context);
+        await saveUserAndChat.run();
 
         const saveMessage = new SaveMessage(context);
         saveMessage.run(additionalData);

@@ -33,7 +33,9 @@ export default class Ban extends Command {
      */
     public readonly commands: BotCommand[] = [
         { command: "ban", description: "Bans an user from group." },
-        { command: "delban", description: "Bans an user from group and deletes their's message." }
+        { command: "sban", description: "Silently bans an user from group and deletes their message." },
+        { command: "dban", description: "Bans an user from group and deletes their message." },
+        { command: "sdban", description: "Silently bans an user from group and deletes their message." }
     ];
 
     /**
@@ -77,7 +79,7 @@ export default class Ban extends Command {
         let params = command.getParams() || [];
 
         const replyToMessage = this.context.getMessage()?.getReplyToMessage();
-        if (replyToMessage && command.getCommand() === "delban") {
+        if (replyToMessage && ["dban", "sdban"].includes(command.getCommand())) {
             replyToMessage.delete();
         }
 
@@ -200,6 +202,10 @@ export default class Ban extends Command {
         try {
 
             await ban(user.id, chat.id, chat.federation_id ?? null, reason);
+            if (["sban", "sdban"].includes(this.command.getCommand())) {
+                return;
+            }
+
             const message = Lang.get("bannedMessage")
                 .replace("{userid}", contextUser.getId().toString())
                 .replace("{username}", contextUser.getFirstName() ?? contextUser.getUsername() ?? contextUser.getId().toString())

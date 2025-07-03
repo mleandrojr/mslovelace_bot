@@ -14,6 +14,7 @@ import Context from "contexts/Context";
 import Message from "contexts/Message";
 import User from "contexts/User";
 import CommandContext from "contexts/Command";
+import Lang from "helpers/Lang";
 import { BotCommand } from "libraries/telegram/types/BotCommand";
 
 export default class Kick extends Command {
@@ -27,7 +28,10 @@ export default class Kick extends Command {
      * @var {BotCommand[]}
      */
     public readonly commands: BotCommand[] = [
-        { command: "kick", description: "Kicks an user from group." }
+        { command: "kick", description: "Kicks an user from group." },
+        { command: "skick", description: "Silently kicks an user from group." },
+        { command: "dkick", description: "Kicks an user from group and deletes their message." },
+        { command: "sdkick", description: "Silently kicks an user from group and deletes their message." }
     ];
 
     /**
@@ -59,6 +63,10 @@ export default class Kick extends Command {
         this.context?.getMessage()?.delete();
 
         const replyToMessage = this.context?.getMessage()?.getReplyToMessage();
+        if (replyToMessage && ["dkick", "sdkick"].includes(command.getCommand())) {
+            replyToMessage.delete();
+        }
+
         if (replyToMessage) {
             this.kickByReply(replyToMessage);
             return Promise.resolve();
