@@ -108,9 +108,9 @@ export default class Base extends Command {
      * @since  2024-04-22
      *
      * @param users
-     * @param chat
+     * @param warnings
      *
-     * @returns
+     * @return {Record<string, any>}
      */
     private getMessageOptions(users: User[], warnings: Record<string, any>[]): Record<string, any> {
 
@@ -126,8 +126,9 @@ export default class Base extends Command {
             return options;
         }
 
-        const lastWarning: Record<string, any> = warnings.at(-1)!;
-        const lastWarningRemowalButton: InlineKeyboardButton = {
+        /* Get the last warning */
+        const lastWarning = warnings[warnings.length - 1];
+        const lastWarningRemovalButton: InlineKeyboardButton = {
             text: Lang.get("lastWarningRemovalButton"),
             callback_data: JSON.stringify({
                 c: "warning",
@@ -135,7 +136,7 @@ export default class Base extends Command {
             })
         };
 
-        const allWarningsRemowalButton: InlineKeyboardButton = {
+        const allWarningsRemovalButton: InlineKeyboardButton = {
             text: Lang.get("warningsRemovalButton"),
             callback_data: JSON.stringify({
                 c: "warning",
@@ -143,11 +144,10 @@ export default class Base extends Command {
             })
         };
 
-        const markup: InlineKeyboardMarkup = {
-            inline_keyboard: [[lastWarningRemowalButton], [allWarningsRemowalButton]]
+        options.replyMarkup = {
+            inline_keyboard: [[lastWarningRemovalButton], [allWarningsRemovalButton]]
         };
 
-        options.replyMarkup = markup;
         return options;
     }
 }

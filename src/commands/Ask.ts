@@ -71,7 +71,7 @@ export default class Ask extends Command {
 
         const replyToMessage = this.context.getMessage()?.getReplyToMessage();
         if (replyToMessage) {
-            replyToMessage.reply(Lang.get("askToAskLink"));
+            await replyToMessage.reply(Lang.get("askToAskLink"));
             return Promise.resolve();
         }
 

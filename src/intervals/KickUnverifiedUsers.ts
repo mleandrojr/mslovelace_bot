@@ -24,7 +24,7 @@ export default class KickUnverifiedUsers implements Iinterval {
      * @author Marcos Leandro
      * @since  2025-02-25
      */
-    private interval: NodeJS.Timer | null = null;
+    private interval: NodeJS.Timeout | null = null;
 
     /**
      * The constructor.
