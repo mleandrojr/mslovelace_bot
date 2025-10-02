@@ -22,7 +22,7 @@ export default class DeleteExpiredMessages implements Iinterval {
      * @author Marcos Leandro
      * @since  2025-02-25
      */
-    private readonly interval: NodeJS.Timer;
+    private readonly interval: NodeJS.Timeout;
 
     /**
      * The constructor.

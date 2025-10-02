@@ -202,7 +202,7 @@ export default class Ban extends Command {
         try {
 
             await ban(user.id, chat.id, chat.federation_id ?? null, reason);
-            if (["sban", "sdban"].includes(this.command.getCommand())) {
+            if (["sban", "sdban"].includes(<string> this.command?.getCommand())) {
                 return;
             }
 

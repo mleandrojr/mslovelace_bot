@@ -1,0 +1,1 @@
+ALTER TABLE `rel_users_chats` CHANGE `captcha` `captcha` CHAR(6) NULL DEFAULT NULL;
