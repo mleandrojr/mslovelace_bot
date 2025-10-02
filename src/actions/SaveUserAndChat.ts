@@ -13,9 +13,9 @@ import Action from "./Action";
 import Chat from "contexts/Chat";
 import Context from "contexts/Context";
 import Log from "helpers/Log";
+import User from "contexts/User";
 import { getChatById, createAndGetChat } from "services/Chats";
 import { createAndGetUser } from "services/Users";
-import User from "contexts/User";
 import { chats, users, PrismaClient } from "@prisma/client";
 
 export default class SaveUserAndChat extends Action {

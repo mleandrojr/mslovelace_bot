@@ -15,6 +15,7 @@ import Context from "contexts/Context";
 import Lang from "helpers/Lang";
 import User from "contexts/User";
 import { addUserToShield, getUserByTelegramId } from "services/AdaShield";
+import { chats, users, PrismaClient } from "@prisma/client";
 
 export default class AdaShield extends Action {
 
@@ -54,11 +55,37 @@ export default class AdaShield extends Action {
             return Promise.resolve();
         }
 
-        if (!await getUserByTelegramId(newChatMember.getId()) && !await this.cas(newChatMember)) {
+        const user = await getUserByTelegramId(newChatMember.getId()) && !await this.cas(newChatMember);
+        if (!user) {
             return Promise.resolve();
         }
 
+        const newChat = await this.getChat(this.context.getChat());
+        const chat = await getChatById(newChat.id);
+
         newChatMember.ban();
+
+        const prisma = new PrismaClient();
+        await prisma.rel_users_chats.upsert({
+            where: {
+                user_id_chat_id: {
+                    user_id: user.id,
+                    chat_id: chat.id
+                }
+            },
+            update: {
+                joined: false,
+                checked: false,
+                date: Math.floor(Date.now() / 1000),
+                last_seen: Math.floor(Date.now() / 1000)
+            }
+
+        }).catch((err: Error) => {
+            Log.save(err.message, err.stack);
+
+        }).finally(async () => {
+            await prisma.$disconnect();
+        });
 
         const userId = newChatMember.getId();
         const username = (newChatMember.getFirstName() ?? newChatMember.getUsername());
@@ -67,9 +94,9 @@ export default class AdaShield extends Action {
             .replace(/{username}/g, username ?? "");
 
         this.context.getChat()?.sendMessage(lang, {
-            parse_mode : "HTML",
-            link_preview_options : {
-                is_disabled : true
+            parse_mode: "HTML",
+            link_preview_options: {
+                is_disabled: true
             }
         });
     }
