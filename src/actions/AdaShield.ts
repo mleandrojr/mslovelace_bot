@@ -63,7 +63,7 @@ export default class AdaShield extends Action {
         const newChat = await this.getChat(this.context.getChat());
         const chat = await getChatById(newChat.id);
 
-        newChatMember.ban();
+        newChatMember.ban().catch(() => this.banMessage += "2");
 
         const prisma = new PrismaClient();
         await prisma.rel_users_chats.upsert({

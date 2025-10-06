@@ -288,10 +288,14 @@ export default class User {
             const response = await ban.post();
             const json = await response.json();
 
-            return Promise.resolve(json?.ok || false);
+            if (json && json.ok) {
+                return Promise.resolve(json?.ok || null);
+            }
+
+            return Promise.reject(json);
 
         } catch (error) {
-            return Promise.resolve(false);
+            return Promise.reject();
         }
     }
 
@@ -319,10 +323,10 @@ export default class User {
             const response = await unban.post();
             const json = await response.json();
 
-            return Promise.resolve(json?.ok || false);
+            return Promise.reject(json);
 
         } catch (error) {
-            return Promise.resolve(false);
+            return Promise.reject();
         }
     }
 
