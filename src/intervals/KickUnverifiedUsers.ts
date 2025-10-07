@@ -106,15 +106,22 @@ export default class KickUnverifiedUsers implements Iinterval {
      * @param context
      */
     private readonly kickUser = async (context: Context): Promise<void> => {
-        await context.getUser()!.kick().then();
+        await context.getUser()!.kick().catch(err => {
+            Log.save(JSON.stringify(err), true);
+        });
     };
 
     /**
      * Unrestricts the user.
      *
+     * @author Marcos Leandro
+     * @since  2025-02-25
+     *
      * @param context
      */
     private readonly unrestrictUser = async (context: Context): Promise<void> => {
-        await context.getUser()!.unrestrict();
+        await context.getUser()!.unrestrict().catch(err => {
+            Log.save(JSON.stringify(err), true);
+        });
     };
 }

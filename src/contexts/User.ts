@@ -323,7 +323,7 @@ export default class User {
             const response = await unban.post();
             const json = await response.json();
 
-            return Promise.reject(json);
+            return Promise.resolve(json);
 
         } catch (error) {
             return Promise.reject();
