@@ -138,6 +138,10 @@ export default class Rules extends Command {
      */
     private async addrules(): Promise<boolean> {
 
+        if (!await this.context?.getUser()?.isAdmin()) {
+            return Promise.resolve();
+        }
+
         const text = this.context?.getMessage()?.getText().replace(`/${this.command!.getCommand()}`, "").trim() ?? "";
         if (!text.length || text.length < 2) {
             return Promise.resolve(false);
@@ -170,6 +174,10 @@ export default class Rules extends Command {
      * @return true on success, false on failure.
      */
     private async delrules(): Promise<boolean> {
+
+        if (!await this.context?.getUser()?.isAdmin()) {
+            return Promise.resolve();
+        }
 
         const prisma = new PrismaClient();
 
