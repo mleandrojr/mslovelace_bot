@@ -74,9 +74,6 @@ export default class Rules extends Command {
     public async run(command: CommandContext, context: Context): Promise<void> {
 
         this.context = context;
-        if (!await this.context?.getUser()?.isAdmin()) {
-            return Promise.resolve();
-        }
 
         const chatId = this.context?.getChat()?.getId();
         if (!chatId) {
