@@ -24,8 +24,6 @@ export default class AdaShield extends Action {
      *
      * @author Marcos Leandro
      * @since  2023-06-06
-     *
-     * @var string
      */
     private banMessage: string = "adaShieldMessage";
 
@@ -34,10 +32,11 @@ export default class AdaShield extends Action {
      *
      * @author Marcos Leandro
      * @since  2023-06-06
+     *
      * @param context
      */
     public constructor(context: Context) {
-        super(context);
+        super(context, "sync");
     }
 
     /**
@@ -50,12 +49,12 @@ export default class AdaShield extends Action {
      */
     public async run(): Promise<void> {
 
-        const newChatMember = this.context.getNewChatMember();
-        if (!newChatMember) {
+        const chatMember = this.context.getNewChatMember() ?? this.context.getLeftChatMember() ?? this.context.getUser();
+        if (!chatMember) {
             return Promise.resolve();
         }
 
-        const user = await getUserByTelegramId(newChatMember.getId()) && !await this.cas(newChatMember);
+        const user = await getUserByTelegramId(chatMember.getId()) && !await this.cas(chatMember);
         if (!user) {
             return Promise.resolve();
         }
@@ -63,7 +62,7 @@ export default class AdaShield extends Action {
         const newChat = await this.getChat(this.context.getChat());
         const chat = await getChatById(newChat.id);
 
-        newChatMember.ban().catch(() => this.banMessage += "2");
+        chatMember.ban().catch(() => this.banMessage += "2");
 
         const prisma = new PrismaClient();
         await prisma.rel_users_chats.upsert({
@@ -87,8 +86,8 @@ export default class AdaShield extends Action {
             await prisma.$disconnect();
         });
 
-        const userId = newChatMember.getId();
-        const username = (newChatMember.getFirstName() ?? newChatMember.getUsername());
+        const userId = chatMember.getId();
+        const username = (chatMember.getFirstName() ?? chatMember.getUsername());
         const lang = Lang.get(this.banMessage)
             .replace(/{userid}/g, userId.toString())
             .replace(/{username}/g, username ?? "");
