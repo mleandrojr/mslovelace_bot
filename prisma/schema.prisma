@@ -166,10 +166,11 @@ model rel_users_federations {
 }
 
 model shield {
-  id               Int     @id @default(autoincrement()) @db.UnsignedInt
-  telegram_user_id BigInt  @unique(map: "idx_telegram_user_id") @db.UnsignedBigInt
-  date             Int     @db.UnsignedInt
-  reason           String? @db.Text
+  id       Int     @id @default(autoincrement()) @db.UnsignedInt
+  user_id  BigInt? @unique(map: "idx_user_id")
+  username String? @unique(map: "idx_username") @db.VarChar(50)
+  date     Int     @db.UnsignedInt
+  reason   String? @db.Text
 }
 
 model users {

@@ -10,11 +10,13 @@ The name Ada Lovelace was chosen because she was the first programmer in history
 ### Install dependences
 `bun install`
 
+### Prisma DB Pull
+`bun prisma db pull`
+
 ### Prisma Client Generate
 `bun prisma generate`
 
 ### Run
-
 `bun run ./src/index.ts`
 
 ## It can be transpiled and run with node.js as well.
