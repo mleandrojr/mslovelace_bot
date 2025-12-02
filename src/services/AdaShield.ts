@@ -16,7 +16,7 @@ import { PrismaClient, shield } from "@prisma/client";
 const prisma = new PrismaClient();
 
 /**
- * Returns an user from the AdaShield.
+ * Returns an user from the AdaShield by ID.
  *
  * @author Marcos Leandro
  * @since  2025-03-07
@@ -27,7 +27,34 @@ const prisma = new PrismaClient();
  */
 export const getUserByTelegramId = async (telegramUserId: number): Promise<shield|null> => {
     const user = await prisma.shield.findUnique({
-        where: { telegram_user_id: telegramUserId }
+        where: { user_id: telegramUserId }
+
+    }).then(async (response) => {
+        return response;
+
+    }).catch(async (e: Error) => {
+        throw e;
+
+    }).finally(async () => {
+        prisma.$disconnect();
+    });
+
+    return user;
+};
+
+/**
+ * Returns an user from the AdaShield by username.
+ *
+ * @author Marcos Leandro
+ * @since  2025-12-02
+ *
+ * @param userContext
+ *
+ * @return {Promise<shield|null>}
+ */
+export const getUserByUsername = async (username: string): Promise<shield|null> => {
+    const user = await prisma.shield.findUnique({
+        where: { username: username }
 
     }).then(async (response) => {
         return response;
@@ -54,7 +81,7 @@ export const getUserByTelegramId = async (telegramUserId: number): Promise<shiel
 export const addUserToShield = async (userContext: User, reason: string): Promise<void> => {
     await prisma.shield.create({
         data: {
-            telegram_user_id: userContext.getId(),
+            user_id: userContext.getId(),
             reason: reason,
             date: Math.floor(Date.now() / 1000)
         }

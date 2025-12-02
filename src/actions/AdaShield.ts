@@ -14,8 +14,8 @@ import Check from "libraries/combot/resources/Check";
 import Context from "contexts/Context";
 import Lang from "helpers/Lang";
 import User from "contexts/User";
-import { addUserToShield, getUserByTelegramId } from "services/AdaShield";
-import { chats, users, PrismaClient } from "@prisma/client";
+import { addUserToShield, getUserByTelegramId, getUserByUsername } from "services/AdaShield";
+import { PrismaClient } from "@prisma/client";
 
 export default class AdaShield extends Action {
 
@@ -54,8 +54,11 @@ export default class AdaShield extends Action {
             return Promise.resolve();
         }
 
-        const user = await getUserByTelegramId(chatMember.getId()) && !await this.cas(chatMember);
-        if (!user) {
+        const user =
+            await getUserByTelegramId(chatMember.getId()) ??
+            await getUserByUsername(chatMember.getUsername() ?? "");
+
+        if (!user && !await this.cas(chatMember)) {
             return Promise.resolve();
         }
 
