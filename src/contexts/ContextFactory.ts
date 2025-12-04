@@ -13,13 +13,13 @@ import Chat from "./Chat";
 import Context from "./Context";
 import Message from "./Message";
 import User from "./User";
+import CallbackQuery from "./CallbackQuery";
 import { CallbackQuery as CallbackQueryType} from "libraries/telegram/types/CallbackQuery";
 import { ChatMemberUpdated } from "libraries/telegram/types/ChatMemberUpdated";
 import { Message as MessageType } from "libraries/telegram/types/Message";
 import { User as UserType } from "libraries/telegram/types/User";
 import { Update } from "libraries/telegram/types/Update";
 import { ChatMemberTypes } from "libraries/telegram/types/ChatMember";
-import CallbackQuery from "./CallbackQuery";
 
 export default class ContextFactory {
 

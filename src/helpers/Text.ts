@@ -29,7 +29,7 @@ export default class Text {
     }
 
     /**
-     * Escapes the markdown characters.
+     * Escapes the Markdown characters.
      *
      * @author Marcos Leandro
      * @since  2023-06-15

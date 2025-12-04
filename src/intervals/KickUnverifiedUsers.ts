@@ -107,7 +107,7 @@ export default class KickUnverifiedUsers implements Iinterval {
      */
     private readonly kickUser = async (context: Context): Promise<void> => {
         await context.getUser()!.kick().catch(err => {
-            Log.save(JSON.stringify(err), true);
+            Log.save(JSON.stringify(err), err.stack, true);
         });
     };
 
@@ -121,7 +121,7 @@ export default class KickUnverifiedUsers implements Iinterval {
      */
     private readonly unrestrictUser = async (context: Context): Promise<void> => {
         await context.getUser()!.unrestrict().catch(err => {
-            Log.save(JSON.stringify(err), true);
+            Log.save(JSON.stringify(err), err.stack, true);
         });
     };
 }

@@ -104,8 +104,6 @@ export default class App {
      *
      * @author Marcos Leandro
      * @since  1.0.0
-     *
-     * @return {void}
      */
     public listen(): void {
 
@@ -136,8 +134,6 @@ export default class App {
      *
      * @author Marcos Leandro
      * @since  1.0.0
-     *
-     * @return {void}
      */
     private initializeMiddlewares(): void {
         this.expressApp.use(express.json());
@@ -176,7 +172,7 @@ export default class App {
             return;
         }
 
-        Log.info("Registering " + availableCommands.length + " commands...");
+        Log.info(`Registering ${availableCommands.length} commands...`);
         const request = new SetMyCommands();
         request.setCommands(availableCommands);
 

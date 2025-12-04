@@ -139,7 +139,7 @@ export default class Rules extends Command {
     private async addrules(): Promise<boolean> {
 
         if (!await this.context?.getUser()?.isAdmin()) {
-            return Promise.resolve();
+            return Promise.resolve(false);
         }
 
         const text = this.context?.getMessage()?.getText().replace(`/${this.command!.getCommand()}`, "").trim() ?? "";
@@ -157,11 +157,11 @@ export default class Rules extends Command {
             message += "\n\n" + rules;
 
             this.context?.getChat()?.sendMessage(message, { parse_mode : "HTML" });
-            return true;
+            return Promise.resolve(true);
 
         } catch (error: any) {
             Log.save(error.message, error.stack);
-            return false;
+            return Promise.reject();
         }
     }
 
@@ -176,20 +176,19 @@ export default class Rules extends Command {
     private async delrules(): Promise<boolean> {
 
         if (!await this.context?.getUser()?.isAdmin()) {
-            return Promise.resolve();
+            return Promise.resolve(false);
         }
 
         const prisma = new PrismaClient();
-
         return await prisma.chat_rules.delete({
             where: { chat_id: this.chat!.id }
 
         }).then(() => {
-            return true;
+            return Promise.resolve(true);
 
         }).catch(err => {
             Log.save(err.message, err.stack);
-            return false;
+            return Promise.reject();
 
         }).finally(() => {
             prisma.$disconnect();
