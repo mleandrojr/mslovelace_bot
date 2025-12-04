@@ -5,5 +5,6 @@ package-lock.json
 !log/.gitkeep
 log/*
 node_modules
+bun.lock
 bun.lockb
 .idea
