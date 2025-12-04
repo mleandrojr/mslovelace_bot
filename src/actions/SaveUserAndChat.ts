@@ -14,7 +14,7 @@ import Chat from "contexts/Chat";
 import Context from "contexts/Context";
 import Log from "helpers/Log";
 import User from "contexts/User";
-import { getChatById, createAndGetChat } from "services/Chats";
+import { createAndGetChat, getChatById } from "services/Chats";
 import { createAndGetUser } from "services/Users";
 import { chats, users, PrismaClient } from "@prisma/client";
 
@@ -42,11 +42,18 @@ export default class SaveUserAndChat extends Action {
 
         try {
 
-            const user = await this.getUser(this.getContextUser());
-            const newChat = await this.getChat(this.context.getChat());
-            const chat = await getChatById(newChat.id);
+            const contextUser = this.getContextUser();
+            const contextChat = this.context.getChat();
 
-            if (!user || !chat) {
+            if (!contextUser || !contextChat) {
+                return Promise.resolve();
+            }
+
+            const user = await this.getUser(contextUser);
+            const chat = await this.getChat(contextChat);
+            const chatWithConfigs = await getChatById(chat.id);
+
+            if (!user || !chatWithConfigs) {
                 return Promise.reject(new Error("User or chat not found."));
             }
 
@@ -55,14 +62,14 @@ export default class SaveUserAndChat extends Action {
                 where: {
                     user_id_chat_id: {
                         user_id: user.id,
-                        chat_id: chat.id
+                        chat_id: chatWithConfigs.id
                     }
                 },
                 create: {
                     user_id: user.id,
-                    chat_id: chat.id,
+                    chat_id: chatWithConfigs.id,
                     joined: true,
-                    checked: !(chat?.chat_configs?.captcha ?? false),
+                    checked: !(chatWithConfigs.chat_configs?.captcha ?? false),
                     date: Math.floor(Date.now() / 1000),
                     last_seen: Math.floor(Date.now() / 1000)
                 },
@@ -91,13 +98,12 @@ export default class SaveUserAndChat extends Action {
      *
      * @throws Error User not found.
      *
-     * @return Context user.
+     * @return Context user, if applicable.
      */
-    private getContextUser(): User {
-
+    private getContextUser(): User|undefined {
         const contextUser = this.context.getNewChatMember() ?? this.context.getLeftChatMember() ?? this.context.getUser();
         if (!contextUser) {
-            throw new Error("User not found in the context.");
+            return;
         }
 
         return contextUser;

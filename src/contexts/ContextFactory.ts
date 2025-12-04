@@ -52,7 +52,8 @@ export default class ContextFactory {
         "chat_member": ContextFactory.createFromChatMemberUpdated,
         "chat_join_request": ContextFactory.createFromChatJoinRequest,
         "chat_boost": ContextFactory.createFromChatBoost,
-        "removed_from_chat": ContextFactory.createFromChatBoost
+        "removed_from_chat": ContextFactory.createFromChatBoost,
+        "message_reaction_count": ContextFactory.createFromReactionCount
     };
 
     /**
@@ -385,6 +386,34 @@ export default class ContextFactory {
      */
     private static createFromChatBoost(key: string, update: Update): Context|undefined {
         return undefined;
+    }
+
+    /**
+     * Creates a new context from a reaction count.
+     *
+     * @author Marcos Leandro
+     * @since  2025-12-04
+     *
+     * @param key
+     * @param update
+     *
+     * @return {Context|undefined}
+     */
+    private static createFromReactionCount(key: string, update: Update): Context|undefined {
+
+        const context = new Context(key, update);
+        const updateData = update[key as keyof Update] as MessageType;
+        if (typeof updateData !== "object") {
+            return undefined;
+        }
+
+        let chat;
+        if ("chat" in updateData) {
+            chat = new Chat(updateData.chat);
+            context.setChat(chat);
+        }
+
+        return context;
     }
 
     /**
