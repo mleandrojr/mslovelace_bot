@@ -14,7 +14,9 @@ import Check from "libraries/combot/resources/Check";
 import Context from "contexts/Context";
 import Lang from "helpers/Lang";
 import User from "contexts/User";
+import Log from "helpers/Log";
 import { addUserToShield, getUserByTelegramId, getUserByUsername } from "services/AdaShield";
+import { getChatById } from "services/Chats";
 import { PrismaClient } from "@prisma/client";
 
 export default class AdaShield extends Action {
@@ -62,8 +64,8 @@ export default class AdaShield extends Action {
             return Promise.resolve();
         }
 
-        const newChat = await this.getChat(this.context.getChat());
-        const chat = await getChatById(newChat.id);
+        const newChat = this.context.getChat();
+        const chat = await getChatById(newChat!.getId());
 
         chatMember.ban().catch(() => this.banMessage += "2");
 
@@ -71,9 +73,17 @@ export default class AdaShield extends Action {
         await prisma.rel_users_chats.upsert({
             where: {
                 user_id_chat_id: {
-                    user_id: user.id,
-                    chat_id: chat.id
+                    user_id: user!.id,
+                    chat_id: chat!.id
                 }
+            },
+            create: {
+                user_id: user!.id,
+                chat_id: chat!.id,
+                joined: false,
+                checked: false,
+                date: Math.floor(Date.now() / 1000),
+                last_seen: Math.floor(Date.now() / 1000)
             },
             update: {
                 joined: false,
