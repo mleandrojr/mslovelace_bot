@@ -60,7 +60,7 @@ export default class AdaShield extends Action {
             await getUserByTelegramId(chatMember.getId()) ??
             await getUserByUsername(chatMember.getUsername() ?? "");
 
-        if (!user && !await this.cas(chatMember)) {
+        if (!user || await this.cas(chatMember)) {
             return Promise.resolve();
         }
 
@@ -99,18 +99,26 @@ export default class AdaShield extends Action {
             await prisma.$disconnect();
         });
 
-        const userId = chatMember.getId();
-        const username = (chatMember.getFirstName() ?? chatMember.getUsername());
-        const lang = Lang.get(this.banMessage)
-            .replace(/{userid}/g, userId.toString())
-            .replace(/{username}/g, username ?? "");
+        try {
 
-        this.context.getChat()?.sendMessage(lang, {
-            parse_mode: "HTML",
-            link_preview_options: {
-                is_disabled: true
-            }
-        });
+            const userId = chatMember.getId();
+            const username = (chatMember.getFirstName() ?? chatMember.getUsername());
+            const lang = Lang.get(this.banMessage)
+                .replace(/{userid}/g, userId.toString())
+                .replace(/{username}/g, username ?? "");
+
+            this.context.getChat()?.sendMessage(lang, {
+                parse_mode: "HTML",
+                link_preview_options: {
+                    is_disabled: true
+                }
+            }).catch(error => {
+                throw new Error(error);
+            })
+
+        } catch (err) {
+            Log.save((err as Error).message, (err as Error).stack);
+        }
     }
 
     /**
