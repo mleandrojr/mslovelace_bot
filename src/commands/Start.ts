@@ -208,7 +208,7 @@ export default class Start extends Command {
             throw e;
 
         }).finally(async () => {
-            prisma.$disconnect();
+            await prisma.$disconnect();
         });
 
         const captcha = await this.generateCaptcha(code);

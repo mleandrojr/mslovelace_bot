@@ -168,8 +168,8 @@ export default class Captcha extends Command {
             Log.save(err.message, err.stack);
             return false;
 
-        }).finally(() => {
-            prisma.$disconnect();
+        }).finally(async () => {
+            await prisma.$disconnect();
         });
     }
 }

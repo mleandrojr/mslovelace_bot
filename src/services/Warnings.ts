@@ -53,7 +53,7 @@ export async function getUserWarnings(userContext: User, chatContext: Chat) {
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 }
 
@@ -96,6 +96,6 @@ export async function addWarning(userContext: User, chatContext: Chat, reason: s
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 }

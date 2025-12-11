@@ -16,7 +16,7 @@ import { PrismaClient, shield } from "@prisma/client";
 const prisma = new PrismaClient();
 
 /**
- * Returns an user from the AdaShield by ID.
+ * Returns a user from the AdaShield by ID.
  *
  * @author Marcos Leandro
  * @since  2025-03-07
@@ -32,11 +32,11 @@ export const getUserByTelegramId = async (telegramUserId: number): Promise<shiel
     }).then(async (response) => {
         return response;
 
-    }).catch(async (e: Error) => {
+    }).catch((e: Error) => {
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 
     return user;
@@ -59,11 +59,11 @@ export const getUserByUsername = async (username: string): Promise<shield|null> 
     }).then(async (response) => {
         return response;
 
-    }).catch(async (e: Error) => {
+    }).catch((e: Error) => {
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 
     return user;
@@ -79,21 +79,30 @@ export const getUserByUsername = async (username: string): Promise<shield|null> 
  * @param reason
  */
 export const addUserToShield = async (userContext: User, reason: string): Promise<void> => {
-    await prisma.shield.create({
-        data: {
+    await prisma.shield.upsert({
+        create: {
             user_id: userContext.getId(),
             reason: reason,
             date: Math.floor(Date.now() / 1000)
+        },
+
+        update: {
+            reason: reason,
+            date: Math.floor(Date.now() / 1000)
+        },
+
+        where: {
+            user_id: userContext.getId()
         }
 
     }).then(async (response) => {
         return response;
 
-    }).catch(async (e: Error) => {
+    }).catch((e: Error) => {
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 };
 
@@ -167,7 +176,7 @@ const updateAdaShield = async (chatContext: Chat, status: boolean): Promise<bool
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 
     return Promise.resolve(true);

@@ -166,8 +166,8 @@ export default class Restrict extends Command {
             Log.save(e.message, e.stack);
             return false;
 
-        }).finally(() => {
-            prisma.$disconnect();
+        }).finally(async () => {
+            await prisma.$disconnect();
         });
     }
 }

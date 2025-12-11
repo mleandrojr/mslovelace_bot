@@ -67,8 +67,8 @@ export async function getFederationsByUser(userContext: User): Promise<federatio
     }).catch(async (e: Error) => {
         throw e;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 
     return result ?? null;
@@ -97,8 +97,8 @@ export async function getFederationWithChatsById(federationId: number) {
     }).catch(async (e: Error) => {
         throw e;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 
     return result ?? null;
@@ -125,8 +125,8 @@ export async function getFederationUsers(federation: federations): Promise<rel_u
     }).catch(async (e: Error) => {
         throw e;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 
     return result ?? null;
@@ -157,8 +157,8 @@ export async function createFederation(userId: number, description?: string): Pr
     }).catch(async (e: Error) => {
         throw e;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 
     return federation ?? null;
@@ -218,7 +218,7 @@ async function get(where: Parameters<typeof prisma.federations.findUnique>[0]['w
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 
     return result ?? null;

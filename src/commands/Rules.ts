@@ -190,8 +190,8 @@ export default class Rules extends Command {
             Log.save(err.message, err.stack);
             return Promise.reject();
 
-        }).finally(() => {
-            prisma.$disconnect();
+        }).finally(async () => {
+            await prisma.$disconnect();
         });
     }
 
@@ -220,8 +220,8 @@ export default class Rules extends Command {
             Log.save(err.message, err.stack);
             return false;
 
-        }).finally(() => {
-            prisma.$disconnect();
+        }).finally(async () => {
+            await prisma.$disconnect();
         });
     }
 }

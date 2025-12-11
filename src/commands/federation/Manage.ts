@@ -233,16 +233,20 @@ export default class Manage extends Federation {
                 data: { federation_id: null }
 
             }).catch((err: any) => {
-                prisma.$disconnect();
                 throw err;
+
+            }).finally(async () => {
+                await prisma.$disconnect();
             });
 
             await prisma.federations.delete({
                 where: { id: federationId }
 
             }).catch((err: any) => {
-                prisma.$disconnect();
                 throw err;
+
+            }).finally(async () => {
+                await prisma.$disconnect();
             });
 
         } catch (err: any) {

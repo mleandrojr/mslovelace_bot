@@ -95,7 +95,7 @@ export async function getUserAndChatByCaptcha(captcha: string): Promise<RelUserA
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 
     return result as RelUserAndChatType ?? null;
@@ -133,7 +133,7 @@ export async function getNonVerifiedUsers(): Promise<MessageType[]> {
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 
     if (!users) {
@@ -187,7 +187,7 @@ export async function createAndGetUser(user: User): Promise<users> {
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 }
 
@@ -222,7 +222,7 @@ export async function ban(userId: number, chatId: number, federation_id: number|
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 
     return result ?? null;
@@ -248,7 +248,7 @@ async function get(where: PrismaClient['users']['findFirst']['arguments']['where
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 
     return result ?? null;

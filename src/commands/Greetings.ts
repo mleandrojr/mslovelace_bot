@@ -219,8 +219,9 @@ export default class GreetingsCommand extends Command {
 
         }).catch(async (err: Error) => {
             Log.save(err.message, err.stack);
-        }).finally(() => {
-            prisma.$disconnect();
+
+        }).finally(async () => {
+            await prisma.$disconnect();
         });
     }
 
@@ -250,8 +251,8 @@ export default class GreetingsCommand extends Command {
             Log.save(err.message, err.stack);
             return false;
 
-        }).finally(() => {
-            prisma.$disconnect();
+        }).finally(async () => {
+            await prisma.$disconnect();
         });
     }
 }

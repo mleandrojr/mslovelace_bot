@@ -55,8 +55,8 @@ export async function getChatRulesByChatId(chatId: number): Promise<chat_rules|n
     }).then(response => response).catch(async (err: Error) => {
         throw err;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 }
 
@@ -76,8 +76,8 @@ export async function getChatMessagesByChatId(chatId: number): Promise<chat_mess
     }).then(response => response).catch(async (err: Error) => {
         throw err;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 }
 
@@ -113,8 +113,8 @@ export async function createAndGetChat(chat: Chat): Promise<chats> {
     }).catch(async (e: Error) => {
         throw e;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 }
 
@@ -140,7 +140,7 @@ async function get(where: Parameters<typeof prisma.chats.findUnique>[0]['where']
     }).catch(async (e: Error) => {
         throw e;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 }

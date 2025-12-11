@@ -35,8 +35,8 @@ export async function getMacroByChatIdAndMacro(chatId: number, text: string): Pr
     }).catch((e: Error) => {
         throw e;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 
     return macro ?? null;
@@ -63,8 +63,8 @@ export async function getMacrosByChatId(chatId: number): Promise<macros[]> {
     }).catch((e: Error) => {
         throw e;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 
     return macros ?? [];
@@ -97,8 +97,8 @@ export async function addMacroToChat(chatId: number, macro: string, content: str
     }).catch((e: Error) => {
         throw e;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 
     return newMacro;
@@ -120,7 +120,7 @@ export async function removeMacro(macroId: number): Promise<void> {
     }).catch((e: Error) => {
         throw e;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 }

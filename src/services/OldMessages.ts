@@ -47,7 +47,7 @@ export const getOldMessages = async (): Promise<MessageType[]> => {
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 
     if (!oldMessages) {
@@ -112,6 +112,6 @@ export const disableOldMessages = async (messages: MessageType[]): Promise<void>
         throw e;
 
     }).finally(async () => {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     });
 }

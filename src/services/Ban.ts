@@ -38,11 +38,11 @@ export async function addBan(userId: number, chatId: number, reason: string): Pr
     }).then(async (response) => {
         return response as bans | null;
 
-    }).catch(async (e: Error) => {
+    }).catch((e: Error) => {
         throw e;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 }
 
@@ -73,10 +73,10 @@ export async function addFederationBan(userId: number, chatId: number, federatio
     }).then(async (response) => {
         return response as bans | null;
 
-    }).catch(async (e: Error) => {
+    }).catch((e: Error) => {
         throw e;
 
-    }).finally(() => {
-        prisma.$disconnect();
+    }).finally(async () => {
+        await prisma.$disconnect();
     });
 }
