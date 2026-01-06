@@ -112,6 +112,8 @@ export default class Controller {
      */
     protected async handle(payload: UpdateType): Promise<void> {
 
+        Log.save("\n" + JSON.stringify(payload) + "\n");
+
         if (!payload.hasOwnProperty("update_id")) {
             Log.save("Invalid payload.\n" + JSON.stringify(payload), "", false, "error");
             return Promise.resolve();

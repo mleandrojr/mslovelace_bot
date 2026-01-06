@@ -129,7 +129,7 @@ export default class SaveMessage extends Action {
         video && (data["video"] = JSON.stringify(video));
 
         const videoNote = message.getVideoNote();
-        videoNote && (data["videoNote"] = JSON.stringify(videoNote));
+        videoNote && (data["video_note"] = JSON.stringify(videoNote));
 
         const voice = message.getVoice();
         voice && (data["voice"] = JSON.stringify(voice));

@@ -49,7 +49,7 @@ export default class SaveUserAndChat extends Action {
                 return Promise.resolve();
             }
 
-            const user = await this.getUser(contextUser);
+            const user = await this.getUser(contextUser, true);
             const chat = await this.getChat(contextChat);
             const chatWithConfigs = await getChatById(chat.id);
 
@@ -121,13 +121,22 @@ export default class SaveUserAndChat extends Action {
      *
      * @return User.
      */
-    private async getUser(contextUser: User): Promise<users> {
+    private async getUser(contextUser: User, retry: boolean): Promise<users> {
 
         if (!contextUser) {
             throw new Error("User not found in the context.");
         }
 
-        const user = await createAndGetUser(contextUser);
+        let user;
+
+        try {
+            user = await createAndGetUser(contextUser);
+
+        } catch (err: any) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            retry && (user = await this.getUser(contextUser, false));
+        }
+
         if (!user) {
             throw new Error("User not found in the context. " + JSON.stringify(this.context.getPayload()));
         }
