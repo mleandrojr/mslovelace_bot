@@ -433,6 +433,10 @@ export default class Chat {
 
             const response = await sendMessage.post();
             const json = await response.json();
+            if (!json.ok) {
+                return Promise.reject(json);
+            }
+
             return new Message(json.result);
 
         } catch (error: any) {
@@ -466,6 +470,10 @@ export default class Chat {
 
             const response = await sendPhoto.post();
             const json = await response.json();
+            if (!json.ok) {
+                return Promise.reject(json);
+            }
+
             return new Message(json.result);
 
         } catch (error: any) {
@@ -494,6 +502,10 @@ export default class Chat {
 
             const response = await sendChatAction.post();
             const json = await response.json();
+            if (!json.ok) {
+                return Promise.reject(json);
+            }
+
             return new Message(json.result);
 
         } catch (error: any) {

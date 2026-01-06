@@ -102,7 +102,7 @@ export default class Polling extends Controller {
             Log.error(err);
         }
 
-        this.initializeLongPolling(offset ? ++offset : undefined);
+        await this.initializeLongPolling(offset ? ++offset : undefined);
     }
 
     /**
