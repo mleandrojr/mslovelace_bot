@@ -9,16 +9,17 @@
  * @license  GPLv3 <http://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
-import BanChatMember from "../libraries/telegram/resources/BanChatMember";
+import BanChatMember from "libraries/telegram/resources/BanChatMember";
 import Chat from "./Chat";
 import Log from "helpers/Log";
 import Message from "./Message";
-import RestrictChatMember from "../libraries/telegram/resources/RestrictChatMember";
+import RestrictChatMember from "libraries/telegram/resources/RestrictChatMember";
 import SendMessage from "libraries/telegram/resources/SendMessage";
 import SendChatAction from "libraries/telegram/resources/SendChatAction";
 import UnbanChatMember from "libraries/telegram/resources/UnbanChatMember";
+import Warning from "./User/Warning";
 import { User as UserType } from "libraries/telegram/types/User";
-import { ChatPermissions as ChatPermissionsType } from "../libraries/telegram/types/ChatPermissions";
+import { ChatPermissions as ChatPermissionsType } from "libraries/telegram/types/ChatPermissions";
 
 export default class User {
 
@@ -265,6 +266,31 @@ export default class User {
     }
 
     /**
+     * Returns the user warnings.
+     *
+     * @author Marcos Leandro
+     * @since  2026-02-06
+     */
+    public async getWarnings(): Promise<void> {
+        const warning = new Warning(this, this.chat);
+        await warning.get();
+    }
+
+    /**
+     * Warns the user.
+     *
+     * @author Marcos Leandro
+     * @since  2026-02-06
+     *
+     * @param  reason
+     * @param  message
+     */
+    public async warn(reason?: string, message?: Message): Promise<void> {
+        const warning = new Warning(this, this.chat);
+        await warning.warn(reason, message);
+    }
+
+    /**
      * Bans the user.
      *
      * @author Marcos Leandro
@@ -360,6 +386,44 @@ export default class User {
             const now = Math.ceil(Date.now() / 1000);
             restrictChatMember.setUntilDate(now + untilDate);
         }
+
+        return restrictChatMember
+            .post()
+            .then((response: Record<string, any>) => response.json());
+    }
+
+    /**
+     * Restricts the user.
+     *
+     * @author Marcos Leandro
+     * @since  2025-03-07
+     *
+     * @returns {Promise<boolean>}
+     */
+    public async restrict(): Promise<boolean> {
+
+        const permissions: ChatPermissionsType = {
+            can_send_messages: false,
+            can_send_audios: false,
+            can_send_documents: false,
+            can_send_photos: false,
+            can_send_videos: false,
+            can_send_video_notes: false,
+            can_send_voice_notes: false,
+            can_send_polls: false,
+            can_send_other_messages: false,
+            can_add_web_page_previews: false,
+            can_change_info: false,
+            can_invite_users: false,
+            can_pin_messages: false,
+            can_manage_topics: false
+        };
+
+        const restrictChatMember = new RestrictChatMember();
+        restrictChatMember
+            .setUserId(this.getId())
+            .setChatId(this.chat.getId())
+            .setChatPermissions(permissions);
 
         return restrictChatMember
             .post()

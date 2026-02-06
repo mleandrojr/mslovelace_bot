@@ -119,6 +119,7 @@ export default {
     rulesNotFound: "There are no rules configured for this group.",
     rulesDeleted: "The group rules have been removed.",
     rulesUpdated: "The group rules have been updated.",
+    warnBlockedTerm: "Sending of blocked term.",
     privacyPolicy: (() => [
         "Hello! I'm Ada Lovelace, a Telegram bot. I'm here to help, but first, it's important that you know how I handle your data.",
         "<b>Data Collection:</b> I only save and maintain public data from users and groups that I'm a part of. This includes messages sent in groups and public profile information.",

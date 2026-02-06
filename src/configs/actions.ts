@@ -11,6 +11,7 @@
 
 import AdaShield from "../actions/AdaShield";
 import AskToAsk from "../actions/AskToAsk";
+import BlockedTerms from "../actions/BlockedTerms";
 import Captcha from "../actions/Captcha";
 import Greetings from "../actions/Greetings";
 import NewChatMember from "../actions/NewChatMember";
@@ -24,6 +25,7 @@ export const actions = [
     SaveUserAndChat,
     SaveMessage,
     AdaShield,
+    BlockedTerms,
     Captcha,
     Greetings,
     AskToAsk,

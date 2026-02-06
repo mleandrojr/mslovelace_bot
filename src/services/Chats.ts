@@ -11,6 +11,7 @@
 
 import Chat from "contexts/Chat";
 import { ChatWithConfigs } from "types/ChatWithConfigs";
+import { BlockedTerm } from "types/BlockedTerm";
 import { PrismaClient, chat_messages, chat_rules, chats } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -112,6 +113,30 @@ export async function createAndGetChat(chat: Chat): Promise<chats> {
 
     }).catch(async (e: Error) => {
         throw e;
+
+    }).finally(async () => {
+        await prisma.$disconnect();
+    });
+}
+
+/**
+ * Returns the blocked terms by chat ID.
+ *
+ * @author Marcos Leandro
+ * @since  2026-02-06
+ *
+ * @param chatId
+ */
+export async function getBlockedTermsByChatId(chatId: number): Promise<BlockedTerm[]> {
+
+    return await prisma.blocked_terms.findMany({
+        where: { chat_id: chatId }
+
+    }).then(response => {
+        return response as BlockedTerm[];
+
+    }).catch(async (err: Error) => {
+        throw err;
 
     }).finally(async () => {
         await prisma.$disconnect();

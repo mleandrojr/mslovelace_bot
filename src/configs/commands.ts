@@ -32,8 +32,8 @@ import Rules from "commands/Rules";
 import Send from "commands/Send";
 import Start from "commands/Start";
 import Unban from "commands/Unban";
-import Warn from "commands/warning/Warn";
-import Warnings from "commands/warning/Warnings";
+import Warn from "commands/Warn";
+import Warnings from "commands/Warnings";
 import Yarn from "commands/Yarn";
 
 export const commands = [

@@ -9,14 +9,15 @@
  * @license  GPLv3 <http://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
+import Command from "./Command";
 import CommandContext from "contexts/Command";
 import Context from "contexts/Context";
 import User from "contexts/User";
-import WarningsBase from "./Base";
+import Lang from "helpers/Lang";
 import { BotCommand } from "libraries/telegram/types/BotCommand";
 import { getChatByTelegramId } from "services/Chats";
 
-export default class Warnings extends WarningsBase {
+export default class Warnings extends Command {
 
     /**
      * Commands list.
@@ -86,8 +87,11 @@ export default class Warnings extends WarningsBase {
             return Promise.resolve();
         }
 
+        Lang.set(chat.language ?? "en");
+
         const users: User[] = [];
         const replyToMessage = this.context.getMessage()?.getReplyToMessage();
+
         if (replyToMessage?.getUser()) {
             const user = replyToMessage.getUser();
             user && (users.push(user));
@@ -98,8 +102,8 @@ export default class Warnings extends WarningsBase {
             users.push(mention);
         }
 
-        if (users.length) {
-            this.sendWarningMessages(users, context.getChat()!);
+        for (const user of users) {
+            await user.getWarnings();
         }
     }
 }
