@@ -46,9 +46,9 @@ export default class BlockedTerms extends Action {
      */
     public async run(): Promise<void> {
 
-        // if (await this.context.getUser()?.isAdmin()) {
-        //     return;
-        // }
+        if (await this.context.getUser()?.isAdmin()) {
+            return;
+        }
 
         const chatId = this.context.getChat()?.getId();
         if (!chatId) {
