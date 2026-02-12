@@ -87,7 +87,7 @@ export default class BlockedTerms extends Action {
             return;
         }
 
-        await this.context?.getMessage()?.delete().then(async () => {
+        this.context?.getMessage()?.delete().then(async () => {
 
             if (term.action === "mute") {
                 await this.context!.getUser()?.restrict();
@@ -105,7 +105,5 @@ export default class BlockedTerms extends Action {
                 this.isTerminalStatus = true;
             }
         });
-
-        return;
     }
 }
