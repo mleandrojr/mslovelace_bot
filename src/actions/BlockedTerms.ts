@@ -12,6 +12,7 @@
 import Action from "./Action";
 import Context from "contexts/Context";
 import Lang from "helpers/Lang";
+import Log from "helpers/Log";
 import { ChatWithConfigs } from "types/ChatWithConfigs";
 import { BlockedTerm } from "types/BlockedTerm";
 import { getBlockedTermsByChatId, getChatByTelegramId } from "../services/Chats";
@@ -62,13 +63,18 @@ export default class BlockedTerms extends Action {
 
         Lang.set(chat.language || "en");
 
-        const text = this.context.getMessage()?.getText() ?? "";
-        const blocked = await getBlockedTermsByChatId(chat.id);
-        for (const term of blocked) {
-            await this.checkBlockedTerm(chat, term, text);
-            if (this.isTerminalStatus) {
-                break;
+        try {
+            const text = this.context.getMessage()?.getText() ?? "";
+            const blocked = await getBlockedTermsByChatId(chat.id);
+            for (const term of blocked) {
+                await this.checkBlockedTerm(chat, term, text);
+                if (this.isTerminalStatus) {
+                    break;
+                }
             }
+
+        } catch (err: Error) {
+            Log.save(err.toString());
         }
     }
 

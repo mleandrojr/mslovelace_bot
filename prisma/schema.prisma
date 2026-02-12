@@ -209,11 +209,11 @@ model warnings {
 }
 
 model blocked_terms {
-  id      Int                   @id @default(autoincrement()) @db.UnsignedInt
-  chat_id Int                   @db.UnsignedInt
-  term    String                @db.VarChar(50)
-  action  blocked_terms_action?
-  chats   chats                 @relation(fields: [chat_id], references: [id], onUpdate: Restrict, map: "fk_blocked_terms_chats")
+  id      Int                  @id @default(autoincrement()) @db.UnsignedInt
+  chat_id Int                  @db.UnsignedInt
+  term    String               @db.VarChar(50)
+  action  blocked_terms_action @default(delete)
+  chats   chats                @relation(fields: [chat_id], references: [id], onUpdate: Restrict, map: "fk_blocked_terms_chats")
 
   @@unique([chat_id, term], map: "idx_uq_chat_id_term")
   @@index([chat_id], map: "idx_chat_id")
