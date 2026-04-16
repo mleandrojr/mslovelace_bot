@@ -12,9 +12,9 @@
 import Text from "helpers/Text";
 import User from "contexts/User";
 import { getUserByTelegramId } from "./Users";
-import { PrismaClient, federations, rel_users_federations } from "@prisma/client";
+import { federations, rel_users_federations } from "@prisma/client";
+import prisma from "lib/prisma";
 
-const prisma = new PrismaClient();
 
 /**
  * Returns a federation by it's ID.
@@ -66,9 +66,6 @@ export async function getFederationsByUser(userContext: User): Promise<federatio
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return result ?? null;
@@ -96,9 +93,6 @@ export async function getFederationWithChatsById(federationId: number) {
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return result ?? null;
@@ -124,9 +118,6 @@ export async function getFederationUsers(federation: federations): Promise<rel_u
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return result ?? null;
@@ -156,9 +147,6 @@ export async function createFederation(userId: number, description?: string): Pr
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return federation ?? null;
@@ -216,9 +204,6 @@ async function get(where: Parameters<typeof prisma.federations.findUnique>[0]['w
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return result ?? null;

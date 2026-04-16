@@ -13,10 +13,10 @@ import User from "contexts/User";
 import { Chat as ChatType } from "libraries/telegram/types/Chat";
 import { Message as MessageType } from "libraries/telegram/types/Message";
 import { PrismaClient, bans, users } from "@prisma/client";
+import prisma from "lib/prisma";
 import { RelUserAndChat as RelUserAndChatType } from "types/UserAndChat";
 import { User as UserType } from "libraries/telegram/types/User";
 
-const prisma = new PrismaClient();
 
 /**
  * Returns the user by the ID.
@@ -93,9 +93,6 @@ export async function getUserAndChatByCaptcha(captcha: string): Promise<RelUserA
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return result as RelUserAndChatType ?? null;
@@ -131,9 +128,6 @@ export async function getNonVerifiedUsers(): Promise<MessageType[]> {
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     if (!users) {
@@ -185,9 +179,6 @@ export async function createAndGetUser(user: User): Promise<users> {
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }
 
@@ -220,9 +211,6 @@ export async function ban(userId: number, chatId: number, federation_id: number|
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return result ?? null;
@@ -246,9 +234,6 @@ async function get(where: PrismaClient['users']['findFirst']['arguments']['where
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return result ?? null;

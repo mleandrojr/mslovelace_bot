@@ -17,7 +17,7 @@ import Log from "helpers/Log";
 import { BotCommand } from "libraries/telegram/types/BotCommand";
 import { getChatByTelegramId } from "services/Chats";
 import { getUserByTelegramId } from "services/Users";
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 import {
     createFederation,
     getFederationByHash,
@@ -224,7 +224,6 @@ export default class Manage extends Federation {
      */
     private async deleteFederation(federationId: number): Promise<void> {
 
-        const prisma = new PrismaClient();
 
         try {
 
@@ -234,9 +233,6 @@ export default class Manage extends Federation {
 
             }).catch((err: any) => {
                 throw err;
-
-            }).finally(async () => {
-                await prisma.$disconnect();
             });
 
             await prisma.federations.delete({
@@ -244,9 +240,6 @@ export default class Manage extends Federation {
 
             }).catch((err: any) => {
                 throw err;
-
-            }).finally(async () => {
-                await prisma.$disconnect();
             });
 
         } catch (err: any) {

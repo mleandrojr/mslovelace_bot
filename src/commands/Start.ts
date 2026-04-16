@@ -19,7 +19,7 @@ import { InlineKeyboardButton } from "libraries/telegram/types/InlineKeyboardBut
 import { InlineKeyboardMarkup } from "libraries/telegram/types/InlineKeyboardMarkup";
 import { getChatByTelegramId } from "services/Chats";
 import { getUserAndChatByTelegramId, getUserAndChatByPendingCaptcha } from "services/UsersAndChats";
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 
 export default class Start extends Command {
 
@@ -191,7 +191,6 @@ export default class Start extends Command {
         }
 
         const code = this.generateCaptchaCode();
-        const prisma = new PrismaClient();
 
         await prisma.rel_users_chats.update({
             where: {
@@ -206,9 +205,6 @@ export default class Start extends Command {
 
         }).catch(async (e: Error) => {
             throw e;
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
 
         const captcha = await this.generateCaptcha(code);

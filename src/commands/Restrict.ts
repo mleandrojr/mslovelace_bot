@@ -16,7 +16,7 @@ import Lang from "helpers/Lang";
 import Log from "helpers/Log";
 import { BotCommand } from "libraries/telegram/types/BotCommand";
 import { getChatByTelegramId } from "services/Chats";
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 
 export default class Restrict extends Command {
 
@@ -150,7 +150,6 @@ export default class Restrict extends Command {
      */
     private async update(chatId: number, status: boolean): Promise<boolean> {
 
-        const prisma = new PrismaClient();
         return await prisma.chat_configs.upsert({
             where: { chat_id: chatId },
             update: { restrict_new_users: status },
@@ -165,9 +164,6 @@ export default class Restrict extends Command {
         }).catch(async (e: Error) => {
             Log.save(e.message, e.stack);
             return false;
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
     }
 }

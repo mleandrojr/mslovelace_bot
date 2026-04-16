@@ -12,9 +12,9 @@
 import Chat from "contexts/Chat";
 import { ChatWithConfigs } from "types/ChatWithConfigs";
 import { BlockedTerm } from "types/BlockedTerm";
-import { PrismaClient, chat_messages, chat_rules, chats } from "@prisma/client";
+import { chat_messages, chat_rules, chats } from "@prisma/client";
+import prisma from "lib/prisma";
 
-const prisma = new PrismaClient();
 
 /**
  * Returns the chat by it's ID.
@@ -55,9 +55,6 @@ export async function getChatRulesByChatId(chatId: number): Promise<chat_rules|n
 
     }).then(response => response).catch(async (err: Error) => {
         throw err;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }
 
@@ -76,9 +73,6 @@ export async function getChatMessagesByChatId(chatId: number): Promise<chat_mess
 
     }).then(response => response).catch(async (err: Error) => {
         throw err;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }
 
@@ -113,9 +107,6 @@ export async function createAndGetChat(chat: Chat): Promise<chats> {
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }
 
@@ -137,9 +128,6 @@ export async function getBlockedTermsByChatId(chatId: number): Promise<BlockedTe
 
     }).catch(async (err: Error) => {
         throw err;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }
 
@@ -164,8 +152,5 @@ async function get(where: Parameters<typeof prisma.chats.findUnique>[0]['where']
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }

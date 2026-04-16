@@ -14,7 +14,7 @@ import { BotCommand } from "libraries/telegram/types/BotCommand";
 import Lang from "helpers/Lang";
 import Log from "helpers/Log";
 import { getFederationById, getFederationByHash } from "services/Federations";
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 
 export default class Group extends Federation {
 
@@ -119,16 +119,12 @@ export default class Group extends Federation {
 
         try {
 
-            const prisma = new PrismaClient();
             await prisma.chats.update({
                 where: { chat_id: this.context!.getChat()!.getId() },
                 data: { federation_id: federation.id }
 
             }).catch((err) => {
                 Log.error(err.message, err.stack);
-
-            }).finally(async () => {
-                await prisma.$disconnect();
             });;
 
             const message = Lang.get("federationJoinSuccess")
@@ -168,16 +164,12 @@ export default class Group extends Federation {
 
         try {
 
-            const prisma = new PrismaClient();
             await prisma.chats.update({
                 where: { chat_id: this.context!.getChat()!.getId() },
                 data: { federation_id: null }
 
             }).catch((err) => {
                 Log.error(err.message, err.stack);
-
-            }).finally(async () => {
-                await prisma.$disconnect();
             });
 
             this.context?.getMessage()?.reply(Lang.get("federationLeaveSuccess"));

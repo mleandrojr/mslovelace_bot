@@ -9,9 +9,9 @@
  * @license  GPLv3 <http://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
-import { PrismaClient, bans } from "@prisma/client";
+import { bans } from "@prisma/client";
+import prisma from "lib/prisma";
 
-const prisma = new PrismaClient();
 
 /**
  * Adds a ban.
@@ -40,9 +40,6 @@ export async function addBan(userId: number, chatId: number, reason: string): Pr
 
     }).catch((e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }
 
@@ -75,8 +72,5 @@ export async function addFederationBan(userId: number, chatId: number, federatio
 
     }).catch((e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }

@@ -13,9 +13,8 @@ import Chat from "contexts/Chat";
 import User from "contexts/User";
 import { getChatByTelegramId } from "./Chats";
 import { getUserByTelegramId } from "./Users";
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 
-const prisma = new PrismaClient();
 
 /**
  * Returns the user warnings.
@@ -51,9 +50,6 @@ export async function getUserWarnings(userContext: User, chatContext: Chat) {
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }
 
@@ -94,8 +90,5 @@ export async function addWarning(userContext: User, chatContext: Chat, reason: s
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }

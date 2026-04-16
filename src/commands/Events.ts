@@ -17,7 +17,7 @@ import Log from "helpers/Log";
 import { BotCommand } from "libraries/telegram/types/BotCommand";
 import { ChatWithConfigs } from "types/ChatWithConfigs";
 import { getChatByTelegramId } from "services/Chats";
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 
 export default class Events extends Command {
 
@@ -155,7 +155,6 @@ export default class Events extends Command {
             data.greetings = true;
         }
 
-        const prisma = new PrismaClient();
         return await prisma.chat_configs.update({
             where: { chat_id: chatId },
             data: { remove_event_messages: status }
@@ -166,9 +165,6 @@ export default class Events extends Command {
         }).catch(async (err: Error) => {
             Log.save(err.message, err.stack);
             return false;
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
     }
 }

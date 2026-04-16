@@ -12,13 +12,12 @@
 import Chat from "contexts/Chat";
 import Context from "contexts/Context";
 import User from "contexts/User";
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 import { Chat as ChatType } from "libraries/telegram/types/Chat";
 import { Message as MessageType } from "libraries/telegram/types/Message";
 import { Update as UpdateType } from "libraries/telegram/types/Update";
 import { User as UserType } from "libraries/telegram/types/User";
 
-const prisma = new PrismaClient();
 
 /**
  * Returns the context by the user and chat.
@@ -52,9 +51,6 @@ export const getContextByUserAndChat = async (userContext: User, chatContext: Ch
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     if (!contextData) {

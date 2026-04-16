@@ -20,7 +20,7 @@ import { InlineKeyboardButton } from "libraries/telegram/types/InlineKeyboardBut
 import { InlineKeyboardMarkup } from "libraries/telegram/types/InlineKeyboardMarkup";
 import { Message as MessageType } from "libraries/telegram/types/Message";
 import { Update as UpdateType } from "libraries/telegram/types/Update";
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 import { getUserAndChatByTelegramId } from "services/UsersAndChats";
 import { RelUserAndChat } from "types/UserAndChat";
 import Log from "helpers/Log";
@@ -94,7 +94,6 @@ export default class Greetings extends Action {
      */
     private async greetings(): Promise<void> {
 
-        const prisma = new PrismaClient();
         let text = await prisma.chat_messages.findFirst({
             where: {
                 chat_id: this.userAndChat?.chats.id,
@@ -106,9 +105,6 @@ export default class Greetings extends Action {
         }).catch((err: Error) => {
             Log.save(err.toString());
             return Lang.get("defaultGreetings");
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
 
         text = text.replace("{userid}", this.userAndChat!.users.user_id.toString());

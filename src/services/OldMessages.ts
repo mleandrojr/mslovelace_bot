@@ -9,12 +9,11 @@
  * @license  GPLv3 <http://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 import { Chat as ChatType } from "libraries/telegram/types/Chat";
 import { Message as MessageType } from "libraries/telegram/types/Message";
 import { User as UserType } from "libraries/telegram/types/User";
 
-const prisma = new PrismaClient();
 
 /**
  * Returns the messages with expired TTL.
@@ -45,9 +44,6 @@ export const getOldMessages = async (): Promise<MessageType[]> => {
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     if (!oldMessages) {
@@ -110,8 +106,5 @@ export const disableOldMessages = async (messages: MessageType[]): Promise<void>
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }

@@ -17,7 +17,7 @@ import User from "contexts/User";
 import Log from "helpers/Log";
 import { addUserToShield, getUserByTelegramId, getUserByUsername } from "services/AdaShield";
 import { getChatById } from "services/Chats";
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 
 export default class AdaShield extends Action {
 
@@ -69,7 +69,6 @@ export default class AdaShield extends Action {
 
         chatMember.ban().catch(() => this.banMessage += "2");
 
-        const prisma = new PrismaClient();
         await prisma.rel_users_chats.upsert({
             where: {
                 user_id_chat_id: {
@@ -94,9 +93,6 @@ export default class AdaShield extends Action {
 
         }).catch((err: Error) => {
             Log.save(err.message, err.stack);
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
 
         try {

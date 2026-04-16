@@ -16,7 +16,7 @@ import Lang from "helpers/Lang";
 import Log from "helpers/Log";
 import { BotCommand } from "libraries/telegram/types/BotCommand";
 import { getChatByTelegramId } from "services/Chats";
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 
 export default class Captcha extends Command {
 
@@ -156,7 +156,6 @@ export default class Captcha extends Command {
             data.greetings = true;
         }
 
-        const prisma = new PrismaClient();
         return await prisma.chat_configs.update({
             where: { chat_id: chatId },
             data: data
@@ -167,9 +166,6 @@ export default class Captcha extends Command {
         }).catch(async (err: Error) => {
             Log.save(err.message, err.stack);
             return false;
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
     }
 }

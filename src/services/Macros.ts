@@ -9,9 +9,9 @@
  * @license  GPLv3 <http://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
-import { PrismaClient, macros } from "@prisma/client";
+import { macros } from "@prisma/client";
+import prisma from "lib/prisma";
 
-const prisma = new PrismaClient();
 
 /**
  * Returns the macro by chat id and text.
@@ -34,9 +34,6 @@ export async function getMacroByChatIdAndMacro(chatId: number, text: string): Pr
 
     }).catch((e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return macro ?? null;
@@ -62,9 +59,6 @@ export async function getMacrosByChatId(chatId: number): Promise<macros[]> {
 
     }).catch((e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return macros ?? [];
@@ -96,9 +90,6 @@ export async function addMacroToChat(chatId: number, macro: string, content: str
 
     }).catch((e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return newMacro;
@@ -119,8 +110,5 @@ export async function removeMacro(macroId: number): Promise<void> {
 
     }).catch((e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }

@@ -16,7 +16,8 @@ import Log from "helpers/Log";
 import User from "contexts/User";
 import { createAndGetChat, getChatById } from "services/Chats";
 import { createAndGetUser } from "services/Users";
-import { chats, users, PrismaClient } from "@prisma/client";
+import { chats, users } from "@prisma/client";
+import prisma from "lib/prisma";
 
 export default class SaveUserAndChat extends Action {
 
@@ -57,7 +58,6 @@ export default class SaveUserAndChat extends Action {
                 return Promise.reject(new Error("User or chat not found."));
             }
 
-            const prisma = new PrismaClient();
             await prisma.rel_users_chats.upsert({
                 where: {
                     user_id_chat_id: {
@@ -80,9 +80,6 @@ export default class SaveUserAndChat extends Action {
 
             }).catch((err: Error) => {
                 Log.save(err.message, err.stack);
-
-            }).finally(async () => {
-                await prisma.$disconnect();
             });
 
         } catch (err: any) {

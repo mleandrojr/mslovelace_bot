@@ -9,12 +9,12 @@
  * @license  GPLv3 <http://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
-import { PrismaClient, rel_users_chats } from "@prisma/client";
+import { rel_users_chats } from "@prisma/client";
+import prisma from "lib/prisma";
 import { RelUserAndChat as RelUserAndChatType } from "types/UserAndChat";
 import { getChatByTelegramId } from "./Chats";
 import { getUserByTelegramId } from "./Users";
 
-const prisma = new PrismaClient();
 
 /**
  * Returns the user and chat data.
@@ -50,9 +50,6 @@ export async function getUserAndChatByTelegramId(telegramUserId: number, telegra
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return result as RelUserAndChatType ?? null;
@@ -91,9 +88,6 @@ export async function getUserAndChatByPendingCaptcha(telegramUserId: number): Pr
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return result as RelUserAndChatType ?? null;
@@ -142,9 +136,6 @@ export async function join(userId: number, chatId: number, checked: boolean, ttl
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return result;
@@ -182,9 +173,6 @@ export async function leave(userId: number, chatId: number) {
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return result;
@@ -217,8 +205,5 @@ export async function approveOnChat(userId: number, chatId: number): Promise<voi
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 }

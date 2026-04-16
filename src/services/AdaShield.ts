@@ -11,9 +11,9 @@
 
 import Chat from "contexts/Chat";
 import User from "contexts/User";
-import { PrismaClient, shield } from "@prisma/client";
+import { shield } from "@prisma/client";
+import prisma from "lib/prisma";
 
-const prisma = new PrismaClient();
 
 /**
  * Returns a user from the AdaShield by ID.
@@ -34,9 +34,6 @@ export const getUserByTelegramId = async (telegramUserId: number): Promise<shiel
 
     }).catch((e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return user;
@@ -61,9 +58,6 @@ export const getUserByUsername = async (username: string): Promise<shield|null> 
 
     }).catch((e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return user;
@@ -100,9 +94,6 @@ export const addUserToShield = async (userContext: User, reason: string): Promis
 
     }).catch((e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 };
 
@@ -174,9 +165,6 @@ const updateAdaShield = async (chatContext: Chat, status: boolean): Promise<bool
 
     }).catch(async (e: Error) => {
         throw e;
-
-    }).finally(async () => {
-        await prisma.$disconnect();
     });
 
     return Promise.resolve(true);

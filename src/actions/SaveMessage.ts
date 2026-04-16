@@ -15,7 +15,8 @@ import Log from "helpers/Log";
 import CallbackQuery from "contexts/CallbackQuery";
 import { getUserAndChatByTelegramId } from "services/UsersAndChats";
 import { AdditionalData as AdditionalDataType } from "types/AdditionalData";
-import { PrismaClient, messages_type } from "@prisma/client";
+import { messages_type } from "@prisma/client";
+import prisma from "lib/prisma";
 
 export default class SaveMessage extends Action {
 
@@ -68,15 +69,11 @@ export default class SaveMessage extends Action {
 
         await this.addQueryParams(data, additionalData);
 
-        const prisma = new PrismaClient();
         await prisma.messages.create({
             data: data
 
         }).catch((err) => {
             Log.save(err.message, err.trace);
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
     }
 
@@ -172,7 +169,6 @@ export default class SaveMessage extends Action {
             return null;
         }
 
-        const prisma = new PrismaClient();
         return await prisma.messages.findFirst({
             where: {
                 message_id: replyToMessage.getId()
@@ -183,9 +179,6 @@ export default class SaveMessage extends Action {
         }).catch((err) => {
             Log.save(err.message, err.trace);
             return null;
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
     }
 }

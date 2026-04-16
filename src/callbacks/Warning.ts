@@ -9,7 +9,7 @@
  * @license  GPLv3 <http://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 import Callback from "./Callback";
 import CallbackQuery from "contexts/CallbackQuery";
 import Lang from "helpers/Lang";
@@ -136,7 +136,6 @@ export default class Warning extends Callback {
             where["id"] = warningId;
         }
 
-        const prisma = new PrismaClient();
         return await prisma.warnings.updateMany({
             where: where,
             data: { status: false }
@@ -147,9 +146,6 @@ export default class Warning extends Callback {
         }).catch (err => {
             Log.save(err.message, err.stack);
             return false;
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
     }
 }

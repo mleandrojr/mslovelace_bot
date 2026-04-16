@@ -15,7 +15,7 @@ import Context from "contexts/Context";
 import Lang from "helpers/Lang";
 import { BotCommand } from "libraries/telegram/types/BotCommand";
 import { getChatByTelegramId, getChatMessagesByChatId } from "services/Chats";
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 import Log from "helpers/Log";
 
 export default class GreetingsCommand extends Command {
@@ -208,7 +208,6 @@ export default class GreetingsCommand extends Command {
             return Promise.resolve();
         }
 
-        const prisma = new PrismaClient();
         await prisma.chat_messages.upsert({
             where: { chat_id: chat.id },
             update: { greetings: params.join(" ") },
@@ -219,9 +218,6 @@ export default class GreetingsCommand extends Command {
 
         }).catch(async (err: Error) => {
             Log.save(err.message, err.stack);
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
     }
 
@@ -238,7 +234,6 @@ export default class GreetingsCommand extends Command {
      */
     private async updateGreetingsStatus(chatId: number, status: boolean): Promise<boolean> {
 
-        const prisma = new PrismaClient();
         return await prisma.chat_configs.update({
             where: { chat_id: chatId },
             data: { greetings: status }
@@ -250,9 +245,6 @@ export default class GreetingsCommand extends Command {
         }).catch(async (err: Error) => {
             Log.save(err.message, err.stack);
             return false;
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
     }
 }

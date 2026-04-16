@@ -16,7 +16,7 @@ import Lang from "helpers/Lang";
 import Log from "helpers/Log";
 import { BotCommand } from "libraries/telegram/types/BotCommand";
 import { getChatByTelegramId, getChatRulesByChatId } from "services/Chats";
-import { PrismaClient } from "@prisma/client";
+import prisma from "lib/prisma";
 
 export default class Rules extends Command {
 
@@ -179,7 +179,6 @@ export default class Rules extends Command {
             return Promise.resolve(false);
         }
 
-        const prisma = new PrismaClient();
         return await prisma.chat_rules.delete({
             where: { chat_id: this.chat!.id }
 
@@ -189,9 +188,6 @@ export default class Rules extends Command {
         }).catch(err => {
             Log.save(err.message, err.stack);
             return Promise.reject();
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
     }
 
@@ -207,7 +203,6 @@ export default class Rules extends Command {
      */
     private async insertOrUpdateRules(rules: string): Promise<boolean> {
 
-        const prisma = new PrismaClient();
         return prisma.chat_rules.upsert({
             where: { chat_id: this.chat!.id },
             update: { rules: rules },
@@ -219,9 +214,6 @@ export default class Rules extends Command {
         }).catch(err => {
             Log.save(err.message, err.stack);
             return false;
-
-        }).finally(async () => {
-            await prisma.$disconnect();
         });
     }
 }
