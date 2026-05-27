@@ -16,29 +16,31 @@ pub struct ApiResponse<T> {
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct AnimationType {
-    file_id: String,
-    file_unique_id: String,
-    width: u32,
-    height: u32,
-    duration: u32,
-    thumbnail: Option<PhotoSizeType>,
-    file_name: Option<String>,
-    mime_type: Option<String>,
-    file_size: Option<u32>
+    pub file_id: String,
+    pub file_unique_id: String,
+    pub width: u32,
+    pub height: u32,
+    pub duration: u32,
+    pub thumbnail: Option<PhotoSizeType>,
+    pub file_name: Option<String>,
+    pub mime_type: Option<String>,
+    pub file_size: Option<u32>,
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct AudioType {
-    file_id: String,
-    file_unique_id: String,
-    duration: u32,
-    performer: Option<String>,
-    title: Option<String>,
-    file_name: Option<String>,
-    mime_type: Option<String>,
-    file_size: Option<u32>,
-    thumbnail: Option<PhotoSizeType>
+    pub file_id: String,
+    pub file_unique_id: String,
+    pub duration: u32,
+    pub performer: Option<String>,
+    pub title: Option<String>,
+    pub file_name: Option<String>,
+    pub mime_type: Option<String>,
+    pub file_size: Option<u32>,
+    pub thumbnail: Option<PhotoSizeType>,
 }
 
 #[derive(Default, serde::Serialize)]
@@ -49,7 +51,8 @@ pub struct BanType {
     pub revoke_messages: Option<bool>,
 }
 
-#[derive(Default, serde::Deserialize)]
+#[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct CallbackQueryType {
     pub id: String,
     pub from: UserType,
@@ -57,14 +60,16 @@ pub struct CallbackQueryType {
     pub data: Option<String>,
 }
 
-#[derive(Default, serde::Deserialize)]
+#[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct ChatJoinRequestType {
     pub chat: ChatType,
     pub from: UserType,
     pub date: i64,
 }
 
-#[derive(Default, serde::Deserialize)]
+#[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct ChatMemberUpdatedType {
     pub chat: ChatType,
     pub from: UserType,
@@ -72,7 +77,8 @@ pub struct ChatMemberUpdatedType {
     pub new_chat_member: ChatMemberType,
 }
 
-#[derive(Default, serde::Deserialize)]
+#[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct ChatMemberType {
     pub user: UserType,
     pub status: String,
@@ -92,74 +98,78 @@ pub struct ChatType {
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct DirectMessagesTopicType {
-    topic_id: u64,
-    user: UserType
+    pub topic_id: u64,
+    pub user: UserType,
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct DocumentType {
-    file_id: String,
-    file_unique_id: String,
-    thumbnail: Option<PhotoSizeType>,
-    file_name: Option<String>,
-    mime_type: Option<String>,
-    file_size: Option<u64>
+    pub file_id: String,
+    pub file_unique_id: String,
+    pub thumbnail: Option<PhotoSizeType>,
+    pub file_name: Option<String>,
+    pub mime_type: Option<String>,
+    pub file_size: Option<u64>,
 }
 
-#[derive(Default, serde::Serialize, serde::Deserialize)]
+#[derive(Default, Clone, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct MessageEntityType {
-    pub entity_type: String,
+    #[serde(rename = "type")]
+    pub kind: String,
     pub offset: i16,
     pub length: i16,
     pub url: Option<String>,
-    pub user: UserType,
+    pub user: Option<UserType>,
     pub language: Option<String>,
     pub custom_emoji_id: Option<String>,
-    pub unix_time: Option<u64>,
-    pub date_time_format: Option<String>
 }
 
 #[derive(serde::Serialize, serde::Deserialize)]
+#[serde(tag = "type", rename_all = "snake_case")]
 pub enum MessageOriginType {
-    MessageOriginUser,
-    MessageOriginHiddenUser,
-    MessageOriginChat,
-    MessageOriginChannel
+    User(MessageOriginUserType),
+    HiddenUser(MessageOriginHiddenUserType),
+    Chat(MessageOriginChatType),
+    Channel(MessageOriginChannelType),
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct MessageOriginUserType {
-    pub origin_type: String,
     pub date: u64,
-    pub sender_user: UserType
+    pub sender_user: UserType,
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct MessageOriginHiddenUserType {
-    pub origin_type: String,
     pub date: u64,
-    pub sender_user_name: String
+    pub sender_user_name: String,
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct MessageOriginChatType {
-    pub origin_type: String,
     pub date: u64,
     pub sender_chat: ChatType,
-    pub author_signature: Option<String>
+    pub author_signature: Option<String>,
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct MessageOriginChannelType {
-    pub origin_type: String,
     pub date: u64,
     pub chat: ChatType,
     pub message_id: u64,
-    author_signature: Option<String>
+    pub author_signature: Option<String>,
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct MessageType {
     pub message_id: i32,
     pub message_thread_id: Option<i32>,
@@ -177,9 +187,7 @@ pub struct MessageType {
     pub is_topic_message: Option<bool>,
     pub is_automatic_forward: Option<bool>,
     pub reply_to_message: Option<Box<MessageType>>,
-    // pub external_reply: Option<ExternalReplyInfo
     pub quote: Option<TextQuoteType>,
-    // pub reply_to_story: Option<Story>
     pub reply_to_checklist_task_id: Option<u64>,
     pub reply_to_poll_option_id: Option<String>,
     pub via_bot: Option<UserType>,
@@ -194,8 +202,6 @@ pub struct MessageType {
     pub paid_star_count: Option<u16>,
     pub text: Option<String>,
     pub entities: Option<Vec<MessageEntityType>>,
-    // pub link_preview_options: Option<LinkPreviewOptions>,
-    // pub suggested_post_info: Option<SuggestedPostInfo>,
     pub effect_id: Option<String>,
     pub animation: Option<AnimationType>,
     pub audio: Option<AudioType>,
@@ -206,16 +212,17 @@ pub struct MessageType {
     pub video_note: Option<VideoNoteType>,
     pub voice: Option<VoiceType>,
     pub caption: Option<String>,
-    pub caption_entities: Option<Vec<MessageEntityType>>
+    pub caption_entities: Option<Vec<MessageEntityType>>,
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct PhotoSizeType {
-    file_id: String,
-    file_unique_id: String,
-    width: u16,
-    height: u16,
-    file_size: Option<u64>
+    pub file_id: String,
+    pub file_unique_id: String,
+    pub width: u16,
+    pub height: u16,
+    pub file_size: Option<u64>,
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
@@ -227,32 +234,34 @@ pub struct RestrictType {
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct StickerType {
-    file_id: String,
-    file_unique_id: String,
+    pub file_id: String,
+    pub file_unique_id: String,
     #[serde(rename = "type")]
-    kind: String,
-    width: u16,
-    height: u16,
-    is_animated: bool,
-    is_video: bool,
-    thumbnail: Option<PhotoSizeType>,
-    emoji: Option<String>,
-    set_name: Option<String>,
-    mask_position: Option<serde_json::Value>,
-    custom_emoji_id: Option<String>,
-    file_size: Option<u64>
+    pub kind: String,
+    pub width: u16,
+    pub height: u16,
+    pub is_animated: bool,
+    pub is_video: bool,
+    pub thumbnail: Option<PhotoSizeType>,
+    pub emoji: Option<String>,
+    pub set_name: Option<String>,
+    pub mask_position: Option<serde_json::Value>,
+    pub custom_emoji_id: Option<String>,
+    pub file_size: Option<u64>,
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct TextQuoteType {
     pub text: String,
-    pub entities: Vec<MessageEntityType>,
+    pub entities: Option<Vec<MessageEntityType>>,
     pub position: u16,
-    pub is_manual: Option<bool>
+    pub is_manual: Option<bool>,
 }
 
-#[derive(Default, serde::Deserialize)]
+#[derive(Default, serde::Serialize, serde::Deserialize)]
 pub struct UpdateType {
     pub update_id: i64,
     pub message: Option<MessageType>,
@@ -288,26 +297,29 @@ pub struct UserType {
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct VideoNoteType {
     pub file_id: String,
     pub file_unique_id: String,
     pub length: u16,
     pub duration: u32,
     pub thumbnail: Option<PhotoSizeType>,
-    pub file_size: Option<u64>
+    pub file_size: Option<u64>,
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct VideoQualityType {
     pub file_id: String,
     pub file_unique_id: String,
     pub width: u16,
     pub height: u16,
     pub codec: String,
-    pub file_size: Option<u64>
+    pub file_size: Option<u64>,
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct VideoType {
     pub file_id: String,
     pub file_unique_id: String,
@@ -319,14 +331,15 @@ pub struct VideoType {
     pub start_timestamp: Option<u32>,
     pub qualities: Option<Vec<VideoQualityType>>,
     pub file_name: Option<String>,
-    pub file_size: Option<u64>
+    pub file_size: Option<u64>,
 }
 
 #[derive(Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct VoiceType {
-    file_id: String,
-    file_unique_id: String,
+    pub file_id: String,
+    pub file_unique_id: String,
     pub duration: Option<u32>,
-    mime_type: Option<String>,
-    file_size: Option<u32>
+    pub mime_type: Option<String>,
+    pub file_size: Option<u32>,
 }

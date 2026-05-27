@@ -1,13 +1,14 @@
 pub mod contexts;
 pub mod types;
 
-mod params;
+pub(crate) mod params;
 
 pub use contexts::Context;
 
 use std::sync::Arc;
 use reqwest::Client;
 use types::{ApiResponse, BanType, MessageType, RestrictType, UpdateType};
+use crate::integrations::telegram::params::message::MessageParams;
 
 #[derive(Clone)]
 pub struct TelegramApi {
@@ -37,13 +38,13 @@ impl TelegramApi {
         self.client.get(&url).send().await?.json().await
     }
 
-    pub async fn send_message(&self, chat_id: i64, text: &str, params: Option<&MessageType>) -> Result<ApiResponse<MessageType>, reqwest::Error> {
+    pub async fn send_message(&self, chat_id: i64, text: &str, params: Option<&MessageParams>) -> Result<ApiResponse<MessageType>, reqwest::Error> {
         let mut body = serde_json::json!({ "chat_id": chat_id, "text": text });
         if let Some(p) = params { Self::merge(&mut body, p); }
         self.client.post(self.url("sendMessage")).json(&body).send().await?.json().await
     }
 
-    pub async fn reply_to(&self, chat_id: i64, message_id: u64, text: &str, params: Option<&MessageType>) -> Result<ApiResponse<MessageType>, reqwest::Error> {
+    pub async fn reply_to(&self, chat_id: i64, message_id: u64, text: &str, params: Option<&MessageParams>) -> Result<ApiResponse<MessageType>, reqwest::Error> {
         let mut body = serde_json::json!({
             "chat_id": chat_id,
             "text": text,

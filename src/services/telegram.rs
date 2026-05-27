@@ -7,12 +7,16 @@ use crate::integrations::telegram::types::UpdateType;
 use crate::integrations::telegram::TelegramApi;
 
 pub async fn process(pool: &MySqlPool, api: &TelegramApi, update: UpdateType) {
+    if let Ok(json) = serde_json::to_string(&update) {
+        println!("{}", json);
+    }
+
     let ctx = Context::from_update(api, update).await;
 
     actions::run(pool.clone(), &ctx).await;
 
     if let Some(cmd) = extract_command(&ctx) {
-        commands::dispatch(&ctx, &cmd).await;
+        commands::dispatch(pool.clone(), &ctx, &cmd).await;
     }
 }
 
@@ -21,6 +25,7 @@ fn extract_command(ctx: &Context) -> Option<String> {
     if !text.starts_with('/') {
         return None;
     }
+
     let command = text
         .split_whitespace()
         .next()?

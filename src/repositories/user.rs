@@ -32,8 +32,7 @@ pub async fn create(pool: &MySqlPool, from: &TelegramUser) -> Result<User, sqlx:
 
 pub async fn update(pool: &MySqlPool, from: &TelegramUser) -> Result<(), sqlx::Error> {
     sqlx::query(
-        "UPDATE users SET username = ?, first_name = ?, last_name = ?, is_premium = ?, language_code = ?
-         WHERE user_id = ?"
+        "UPDATE users SET username = ?, first_name = ?, last_name = ?, is_premium = ?, language_code = ? WHERE user_id = ?"
     )
     .bind(&from.username)
     .bind(&from.first_name)

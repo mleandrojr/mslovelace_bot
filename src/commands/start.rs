@@ -1,6 +1,9 @@
+use sqlx::MySqlPool;
 use crate::integrations::telegram::Context;
 
-pub async fn handle(ctx: &Context) {
+pub async fn handle(pool: MySqlPool, ctx: &Context) {
     let Some(chat) = &ctx.chat else { return };
-    chat.send_message(&ctx.t("startMessage"), None).await;
+
+    let lang = ctx.t_db(&pool, "startMessage").await;
+    let _ = chat.send_message(&lang, None).await;
 }

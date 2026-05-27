@@ -9,10 +9,12 @@ use crate::integrations::telegram::TelegramApi;
 pub struct AppState {
     pub pool: MySqlPool,
     pub api: TelegramApi,
+    pub auth: String,
 }
 
 pub async fn run(pool: MySqlPool, api: TelegramApi) {
-    let state = AppState { pool, api };
+    let auth = std::env::var("AUTH").expect("AUTH must be set");
+    let state = AppState { pool, api, auth };
     let app = Router::new().merge(routes::router()).with_state(state);
 
     let base_port: u16 = std::env::var("PORT")
