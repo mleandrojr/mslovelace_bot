@@ -73,8 +73,8 @@ export default class BlockedTerms extends Action {
                 }
             }
 
-        } catch (err: Error) {
-            Log.save(err.toString());
+        } catch (err: unknown) {
+            Log.save(err instanceof Error ? err.message : String(err), err instanceof Error ? err.stack : undefined);
         }
     }
 

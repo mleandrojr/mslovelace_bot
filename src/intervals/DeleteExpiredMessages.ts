@@ -22,7 +22,7 @@ export default class DeleteExpiredMessages implements Iinterval {
      * @author Marcos Leandro
      * @since  2025-02-25
      */
-    private readonly interval: NodeJS.Timeout;
+    private interval: NodeJS.Timeout | null = null;
 
     /**
      * The constructor.
@@ -31,7 +31,7 @@ export default class DeleteExpiredMessages implements Iinterval {
      * @since  2023-06-07
      */
     public constructor() {
-        this.interval = setInterval(this.run, 1000);
+        this.run();
     }
 
     /**
@@ -41,7 +41,9 @@ export default class DeleteExpiredMessages implements Iinterval {
      * @since  2025-02-25
      */
     public destroy(): void {
-        clearInterval(this.interval);
+        if (this.interval) {
+            clearTimeout(this.interval);
+        }
     }
 
     /**
@@ -52,13 +54,17 @@ export default class DeleteExpiredMessages implements Iinterval {
      */
     private readonly run = async (): Promise<void> => {
 
-        const messages = await this.getMessages();
-        if (!messages.length) {
-            return Promise.resolve();
+        try {
+            const messages = await this.getMessages();
+            if (messages.length) {
+                await this.deleteMessages(messages);
+                await disableOldMessages(messages);
+            }
+        } catch (err: any) {
+            /* intentionally swallowed — interval must keep running */
+        } finally {
+            this.interval = setTimeout(this.run, 1000);
         }
-
-        await this.deleteMessages(messages);
-        await disableOldMessages(messages);
     }
 
     /**
@@ -88,12 +94,12 @@ export default class DeleteExpiredMessages implements Iinterval {
      * @param messages
      */
     private async deleteMessages(messages: MessageType[]): Promise<void> {
-        messages.forEach(async (message) => {
+        for (const message of messages) {
             const deleteMessage = new DeleteMessage();
-            deleteMessage
+            await deleteMessage
                 .setMessageId(message.message_id)
                 .setChatId(message.chat.id)
                 .post();
-        });
+        }
     }
 }

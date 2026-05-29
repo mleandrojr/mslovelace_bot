@@ -12,5 +12,6 @@
 export type RequestType = {
     method : string,
     headers : Record<string, any>,
-    body? : string
+    body?   : string,
+    signal? : AbortSignal
 };

@@ -126,9 +126,9 @@ export default class Controller {
                 return Promise.resolve();
             }
 
-            this.handleActions(context);
-            this.handleCommands(context);
-            this.handleCallbacks(context);
+            await this.handleActions(context);
+            await this.handleCommands(context);
+            await this.handleCallbacks(context);
 
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -162,7 +162,7 @@ export default class Controller {
      */
     private async handleCommands(context: Context): Promise<void> {
         for (const command of this.app.getCommands()) {
-            this.executeCommand(command, context);
+            await this.executeCommand(command, context);
         }
     }
 

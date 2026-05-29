@@ -118,7 +118,8 @@ export default class CasApi {
 
         const params: RequestType = {
             method : method,
-            headers : headers
+            headers : headers,
+            signal : AbortSignal.timeout(30_000)
         };
 
         if (["PUT", "POST"].includes(method)) {

@@ -98,8 +98,13 @@ export default class Polling extends Controller {
             const json = await response.json();
             offset = this.parseResponse(json);
 
-        } catch (err) {
-            Log.error(err);
+        } catch (err: any) {
+            if (err?.name === "TimeoutError" || err?.name === "AbortError") {
+                Log.warn(`Polling fetch timed out (offset: ${offset ?? "none"})`);
+
+            } else {
+                Log.error(err);
+            }
         }
 
         await this.initializeLongPolling(offset ? ++offset : undefined);

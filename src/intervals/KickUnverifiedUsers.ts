@@ -64,7 +64,7 @@ export default class KickUnverifiedUsers implements Iinterval {
         try {
 
             const users = await getNonVerifiedUsers();
-            this.processUsers(users);
+            await this.processUsers(users);
 
         } catch (err: any) {
             Log.save(err.message, err.stack)
@@ -88,13 +88,13 @@ export default class KickUnverifiedUsers implements Iinterval {
             return;
         }
 
-        users.forEach(async (message) => {
+        for (const message of users) {
             const context = ContextFactory.create({ update_id: 0, message: message });
             if (context) {
                 await this.kickUser(context);
                 await this.unrestrictUser(context);
             }
-        });
+        }
     }
 
     /**
@@ -107,7 +107,7 @@ export default class KickUnverifiedUsers implements Iinterval {
      */
     private readonly kickUser = async (context: Context): Promise<void> => {
         await context.getUser()!.kick().catch(err => {
-            Log.save(JSON.stringify(err), err.stack, true);
+            Log.save(JSON.stringify(err), err instanceof Error ? err.stack : undefined, true);
         });
     };
 
@@ -121,7 +121,7 @@ export default class KickUnverifiedUsers implements Iinterval {
      */
     private readonly unrestrictUser = async (context: Context): Promise<void> => {
         await context.getUser()!.unrestrict().catch(err => {
-            Log.save(JSON.stringify(err), err.stack, true);
+            Log.save(JSON.stringify(err), err instanceof Error ? err.stack : undefined, true);
         });
     };
 }

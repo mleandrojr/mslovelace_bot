@@ -138,9 +138,13 @@ export default class TelegramBotApi {
             "Content-Length" : body.length.toString()
         };
 
+        const telegramTimeout = (payload as Record<string, any>)?.timeout ?? 0;
+        const fetchTimeoutMs = (Number(telegramTimeout) + 30) * 1000;
+
         const params: Record<string, any> = {
             method : method,
-            headers : headers
+            headers : headers,
+            signal : AbortSignal.timeout(fetchTimeoutMs)
         };
 
         if (["PUT", "POST"].includes(method)) {
