@@ -15,7 +15,7 @@
     "unauthorizedCommandReport": "A conta <a href=\"tg://user?id={userid}\">{username}</a> está tentando enviar um comando não autorizado em <a href=\"https://t.me/{chaturl}\">{chatname}</a>:\n<pre>{content}</pre>",
     "groupStartMessage": "Olá <a href=\"tg://user?id={userid}\">{username}</a>! Me chame no privado se precisar de ajuda.",
     "askToAskRegex": "/^(algu[eé]?m|preciso)\\s(tem|a[kqu]+[ií]\\s)?([doesnt]+ grupo\\s)?(.*)?(ajuda|duvida|sabe|manja|entende|conhe[cs]|usa|help|m[aã]o|for[cç]a|me[xch]+e)(.*)\\??/i",
-    "askToAskLink": "https://dontasktoask.com/pt-br",
+    "askToAskLink": "<a href=\"tg://user?id={userid}\">{username}</a> não pergunte para perguntar, apenas pergunte.\n\nhttps://dontasktoask.com/pt-br",
     "bannedMessage": "Conta <a href=\"tg://user?id={userid}\">{username}</a> banida.\nMotivo: {reason}",
     "unbannedMessage": "Tudo bem. <a href=\"tg://user?id={userid}\">{username}</a> pode se juntar ao grupo novamente.",
     "banErrorMessage": "Não foi possível banir o usuário.",

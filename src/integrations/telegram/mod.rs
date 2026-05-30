@@ -7,7 +7,7 @@ pub use contexts::Context;
 
 use std::sync::Arc;
 use reqwest::Client;
-use types::{ApiResponse, BanType, MessageType, RestrictType, UpdateType};
+use types::{ApiResponse, BanType, ChatAdministratorType, MessageType, RestrictType, UpdateType};
 use crate::integrations::telegram::params::message::MessageParams;
 
 #[derive(Clone)]
@@ -26,16 +26,28 @@ impl TelegramApi {
     }
 
     fn merge(base: &mut serde_json::Value, params: &impl serde::Serialize) {
-        if let Ok(extra) = serde_json::to_value(params) {
-            if let (Some(base), Some(extra)) = (base.as_object_mut(), extra.as_object()) {
-                base.extend(extra.iter().map(|(k, v)| (k.clone(), v.clone())));
-            }
-        }
+        let Ok(extra) = serde_json::to_value(params) else {
+            return;
+        };
+
+        let (Some(base), Some(extra)) = (base.as_object_mut(), extra.as_object()) else {
+            return;
+        };
+
+        base.extend(extra.iter().map(|(k, v)| (k.clone(), v.clone())));
     }
 
     pub async fn get_updates(&self, offset: i64, timeout: u32) -> Result<ApiResponse<Vec<UpdateType>>, reqwest::Error> {
         let url = format!("{}?offset={}&timeout={}", self.url("getUpdates"), offset, timeout);
         self.client.get(&url).send().await?.json().await
+    }
+
+    pub async fn get_chat_administrators(&self, chat_id: i64) -> Result<ApiResponse<Vec<ChatAdministratorType>>, reqwest::Error> {
+        let body = serde_json::json!({
+            "chat_id": chat_id
+        });
+
+        self.client.post(self.url("getChatAdministrators")).json(&body).send().await?.json().await
     }
 
     pub async fn send_message(&self, chat_id: i64, text: &str, params: Option<&MessageParams>) -> Result<ApiResponse<MessageType>, reqwest::Error> {
@@ -50,6 +62,7 @@ impl TelegramApi {
             "text": text,
             "reply_to_message_id": message_id,
         });
+
         if let Some(p) = params { Self::merge(&mut body, p); }
         self.client.post(self.url("sendMessage")).json(&body).send().await?.json().await
     }

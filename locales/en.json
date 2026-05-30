@@ -15,7 +15,7 @@
     "unauthorizedCommandReport": "The user <a href=\"tg://user?id={userid}\">{username}</a> is trying to send an unauthorized command in <a href=\"https://t.me/{chaturl}\">{chatname}</a>:\n<pre>{content}</pre>",
     "groupStartMessage": "Hey <a href=\"tg://user?id={userid}\">{username}</a>! PM me if you want some help.",
     "askToAskRegex": "/(Any)\\s(.*)\\s(expert\\s|dev\\s)?(can\\s)?(here|help)(.*)\\??/i",
-    "askToAskLink": "https://dontasktoask.com",
+    "askToAskLink": "<a href=\"tg://user?id={userid}\">{username}</a>, don't ask to ask.\n\nhttps://dontasktoask.com",
     "bannedMessage": "<a href=\"tg://user?id={userid}\">{username}</a> banned.\nReason: {reason}",
     "unbannedMessage": "Alright. <a href=\"tg://user?id={userid}\">{username}</a> can join the group again.",
     "banErrorMessage": "Couldn't ban the user.",
