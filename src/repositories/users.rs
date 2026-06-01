@@ -10,6 +10,13 @@ pub async fn find_by_user_id(pool: &MySqlPool, user_id: i64) -> Result<Option<Us
         .await
 }
 
+pub async fn find_by_username(pool: &MySqlPool, username: &str) -> Result<Option<User>, sqlx::Error> {
+    sqlx::query_as::<_, User>("SELECT * FROM users WHERE username = ?")
+        .bind(username)
+        .fetch_optional(pool)
+        .await
+}
+
 pub async fn create(pool: &MySqlPool, from: &TelegramUser) -> Result<User, sqlx::Error> {
     sqlx::query(
         "INSERT INTO users (user_id, username, first_name, last_name, is_bot, is_premium, language_code)

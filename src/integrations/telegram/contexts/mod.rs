@@ -9,7 +9,7 @@ pub use user::User;
 use sqlx::MySqlPool;
 
 use crate::i18n::I18n;
-use crate::repositories::chat as chat_repository;
+use crate::repositories::chats;
 use crate::integrations::telegram::TelegramApi;
 use crate::integrations::telegram::types::{
     CallbackQueryType, ChatJoinRequestType, ChatMemberType, ChatMemberUpdatedType, MessageType, UpdateType as TelegramUpdate,
@@ -153,7 +153,7 @@ impl Context {
             None => return "en".to_string(),
         };
 
-        if let Ok(Some(db_chat)) = chat_repository::find_by_chat_id(pool, chat_id).await {
+        if let Ok(Some(db_chat)) = chats::find_by_chat_id(pool, chat_id).await {
             return db_chat.language;
         }
 

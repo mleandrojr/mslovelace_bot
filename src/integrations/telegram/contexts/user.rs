@@ -33,17 +33,15 @@ impl User {
         false
     }
 
-    pub fn kick(&self, reason: Option<String>) {
+    pub fn kick(&self, reason: Option<&str>) {
 
     }
 
-    pub async fn ban(&self, reason: Option<String>) {
-        let Ok(_) = self.api.ban_chat_member(self.data.id, self.chat.data.id, None).await else {
-            return;
-        };
+    pub async fn ban(&self, reason: Option<&str>) -> bool {
+        self.api.ban_chat_member(self.data.id, self.chat.data.id, None).await.is_ok()
     }
 
-    pub fn tban(&self, time: u32, reason: Option<String>) {
+    pub fn tban(&self, time: u32, reason: Option<&str>) {
 
     }
 }

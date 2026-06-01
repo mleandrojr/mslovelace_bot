@@ -20,17 +20,17 @@ pub async fn run(pool: MySqlPool, ctx: &Context) {
 }
 
 async fn ensure_user(pool: &MySqlPool, user: &User) -> Option<crate::models::user::User> {
-    match crate::repositories::user::find_by_user_id(pool, user.data.id).await {
-        Ok(Some(u)) => { let _ = crate::repositories::user::update(pool, &user.data).await; Some(u) }
-        Ok(None) => crate::repositories::user::create(pool, &user.data).await.ok(),
+    match crate::repositories::users::find_by_user_id(pool, user.data.id).await {
+        Ok(Some(u)) => { let _ = crate::repositories::users::update(pool, &user.data).await; Some(u) }
+        Ok(None) => crate::repositories::users::create(pool, &user.data).await.ok(),
         Err(e) => { eprintln!("DB error (user): {}", e); None }
     }
 }
 
 async fn ensure_chat(pool: &MySqlPool, chat: &Chat) -> Option<crate::models::chat::Chat> {
-    match crate::repositories::chat::find_by_chat_id(pool, chat.data.id).await {
-        Ok(Some(c)) => { let _ = crate::repositories::chat::update(pool, &chat.data).await; Some(c) }
-        Ok(None) => crate::repositories::chat::create(pool, &chat.data).await.ok(),
+    match crate::repositories::chats::find_by_chat_id(pool, chat.data.id).await {
+        Ok(Some(c)) => { let _ = crate::repositories::chats::update(pool, &chat.data).await; Some(c) }
+        Ok(None) => crate::repositories::chats::create(pool, &chat.data).await.ok(),
         Err(e) => { eprintln!("DB error (chat): {}", e); None }
     }
 }
