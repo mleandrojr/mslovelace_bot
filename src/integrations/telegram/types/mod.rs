@@ -7,7 +7,7 @@ pub enum ChatKind {
     Channel,
 }
 
-#[derive(Default, serde::Deserialize, Debug)]
+#[derive(Clone, Default, serde::Deserialize, Debug)]
 pub struct ApiResponse<T> {
     pub ok: bool,
     pub result: Option<T>,
@@ -15,7 +15,7 @@ pub struct ApiResponse<T> {
     pub description: Option<String>,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct AnimationType {
     pub file_id: String,
@@ -29,7 +29,7 @@ pub struct AnimationType {
     pub file_size: Option<u32>,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct AudioType {
     pub file_id: String,
@@ -43,7 +43,7 @@ pub struct AudioType {
     pub thumbnail: Option<PhotoSizeType>,
 }
 
-#[derive(Default, serde::Serialize)]
+#[derive(Clone, Default, serde::Serialize)]
 pub struct BanType {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub until_date: Option<i64>,
@@ -51,7 +51,7 @@ pub struct BanType {
     pub revoke_messages: Option<bool>,
 }
 
-#[derive(Default, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct CallbackQueryType {
     pub id: String,
@@ -60,7 +60,7 @@ pub struct CallbackQueryType {
     pub data: Option<String>,
 }
 
-#[derive(Debug, Default, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct ChatAdministratorType {
     pub user: UserType,
@@ -83,7 +83,7 @@ pub struct ChatAdministratorType {
     pub can_manage_voice_chats: bool
 }
 
-#[derive(Default, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct ChatJoinRequestType {
     pub chat: ChatType,
@@ -91,7 +91,7 @@ pub struct ChatJoinRequestType {
     pub date: i64,
 }
 
-#[derive(Default, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct ChatMemberUpdatedType {
     pub chat: ChatType,
@@ -100,7 +100,7 @@ pub struct ChatMemberUpdatedType {
     pub new_chat_member: ChatMemberType,
 }
 
-#[derive(Default, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct ChatMemberType {
     pub user: UserType,
@@ -120,14 +120,14 @@ pub struct ChatType {
     pub is_direct_messages: Option<bool>,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct DirectMessagesTopicType {
     pub topic_id: u64,
     pub user: UserType,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct DocumentType {
     pub file_id: String,
@@ -151,7 +151,7 @@ pub struct MessageEntityType {
     pub custom_emoji_id: Option<String>,
 }
 
-#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum MessageOriginType {
     User(MessageOriginUserType),
@@ -160,21 +160,21 @@ pub enum MessageOriginType {
     Channel(MessageOriginChannelType),
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct MessageOriginUserType {
     pub date: u64,
     pub sender_user: UserType,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct MessageOriginHiddenUserType {
     pub date: u64,
     pub sender_user_name: String,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct MessageOriginChatType {
     pub date: u64,
@@ -182,7 +182,7 @@ pub struct MessageOriginChatType {
     pub author_signature: Option<String>,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct MessageOriginChannelType {
     pub date: u64,
@@ -191,7 +191,7 @@ pub struct MessageOriginChannelType {
     pub author_signature: Option<String>,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct MessageType {
     pub message_id: i32,
@@ -238,7 +238,7 @@ pub struct MessageType {
     pub caption_entities: Option<Vec<MessageEntityType>>,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct PhotoSizeType {
     pub file_id: String,
@@ -248,7 +248,7 @@ pub struct PhotoSizeType {
     pub file_size: Option<u64>,
 }
 
-#[derive(Default, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct RestrictType {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub permissions: Option<serde_json::Value>,
@@ -256,7 +256,7 @@ pub struct RestrictType {
     pub until_date: Option<i64>,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct StickerType {
     pub file_id: String,
@@ -275,7 +275,7 @@ pub struct StickerType {
     pub file_size: Option<u64>,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct TextQuoteType {
     pub text: String,
@@ -284,7 +284,7 @@ pub struct TextQuoteType {
     pub is_manual: Option<bool>,
 }
 
-#[derive(Default, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct UpdateType {
     pub update_id: i64,
     pub message: Option<MessageType>,
@@ -319,7 +319,7 @@ pub struct UserType {
     pub can_manage_bots: bool,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct VideoNoteType {
     pub file_id: String,
@@ -330,7 +330,7 @@ pub struct VideoNoteType {
     pub file_size: Option<u64>,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct VideoQualityType {
     pub file_id: String,
@@ -341,7 +341,7 @@ pub struct VideoQualityType {
     pub file_size: Option<u64>,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct VideoType {
     pub file_id: String,
@@ -357,7 +357,7 @@ pub struct VideoType {
     pub file_size: Option<u64>,
 }
 
-#[derive(Default, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct VoiceType {
     pub file_id: String,

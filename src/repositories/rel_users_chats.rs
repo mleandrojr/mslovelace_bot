@@ -1,9 +1,9 @@
 use sqlx::MySqlPool;
 
-use crate::models::rel_users_chats::RelUsersChats;
+use crate::models::rel_user_chat::RelUserChat;
 
-pub async fn find(pool: &MySqlPool, user_id: u32, chat_id: u32) -> Result<Option<RelUsersChats>, sqlx::Error> {
-    sqlx::query_as::<_, RelUsersChats>(
+pub async fn find(pool: &MySqlPool, user_id: u32, chat_id: u32) -> Result<Option<RelUserChat>, sqlx::Error> {
+    sqlx::query_as::<_, RelUserChat>(
         "SELECT * FROM rel_users_chats WHERE user_id = ? AND chat_id = ?"
     )
     .bind(user_id)

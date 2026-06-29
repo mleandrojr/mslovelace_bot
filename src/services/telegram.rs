@@ -7,10 +7,6 @@ use crate::integrations::telegram::types::UpdateType;
 use crate::integrations::telegram::TelegramApi;
 
 pub async fn process(pool: &MySqlPool, api: &TelegramApi, update: UpdateType) {
-    if let Ok(json) = serde_json::to_string(&update) {
-        println!("{}", json);
-    }
-
     let ctx = Context::from_update(api, update).await;
 
     actions::run(pool.clone(), &ctx).await;

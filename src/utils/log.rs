@@ -34,16 +34,7 @@ impl Log {
         Self::print(&format!("{} {} {}", Colors::FG_BLUE, message, Colors::RESET), "DEBUG");
     }
 
-    fn print(message: &str, level: &str) {
-        let now = Local::now();
-        let line = format!("[{}] {}", now.format("%Y-%m-%d %H:%M:%S"), message);
-        match level {
-            "ERROR" | "WARN" => eprintln!("{}", line),
-            _ => println!("{}", line),
-        }
-    }
-
-    fn save(message: &str, print: bool) {
+    pub fn save(message: &str, print: bool) {
         let now = Local::now();
         let line = format!("[{}] {}\n", now.format("%Y-%m-%d %H:%M:%S").to_string(), message);
         let path = format!("logs/{}.log", now.format("%Y-%m-%d"));
@@ -54,6 +45,15 @@ impl Log {
 
         if print {
             Self::print(message, "ERROR");
+        }
+    }
+
+    fn print(message: &str, level: &str) {
+        let now = Local::now();
+        let line = format!("[{}] {}", now.format("%Y-%m-%d %H:%M:%S"), message);
+        match level {
+            "ERROR" | "WARN" => eprintln!("{}", line),
+            _ => println!("{}", line),
         }
     }
 }

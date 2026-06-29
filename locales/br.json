@@ -66,7 +66,7 @@
     "warningBanMessage": "❌ <a href=\"tg://user?id={userid}\">{username}</a> levou ban por ter {warnings} advertências.\n\nMotivos:\n",
     "warningAdminRemovedLast": "Última advertência de <a href=\"tg://user?id={userid}\">{username}</a> removida por <a href=\"tg://user?id={adminId}\">{adminUsername}</a>.",
     "warningAdminRemovedAll": "Todas as advertências de <a href=\"tg://user?id={userid}\">{username}</a> foram removidas por <a href=\"tg://user?id={adminId}\">{adminUsername}</a>.",
-    "reportMessage": "Reportado aos administradores.",
+    "reportMessage": "Reportado aos administradores\\.",
     "federationCreateOnlyPrivate": "Me chame no privado pra criar uma federação.",
     "federationCreateSuccess": "Federação <code>{name}</code> criada com sucesso!\nVocê já pode adicionar grupos usando o comando <code>/fjoin {hash}</code>",
     "federationCreateError": "Ocorreu um erro ao criar a federação. Por favor, tente novamente mais tarde",

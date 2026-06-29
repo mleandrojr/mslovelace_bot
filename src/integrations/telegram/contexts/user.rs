@@ -1,7 +1,6 @@
 use crate::integrations::telegram::TelegramApi;
 use crate::integrations::telegram::types::{ChatKind, UserType};
 use crate::integrations::telegram::contexts::chat::Chat;
-use crate::utils::log::Log;
 
 pub struct User {
     api: TelegramApi,
@@ -17,23 +16,49 @@ impl User {
 
     pub async fn is_admin(&self) -> bool {
         if matches!(self.chat.data.kind, Some(ChatKind::Private)) {
-            Log::debug(&format!("is_admin: user_id={} private chat", self.data.id));
             return true;
         }
 
         let admins = self.chat.get_admins().await;
         for admin in admins {
             if admin.user.id == self.data.id {
-                Log::debug(&format!("is_admin: user_id={} found in admin list", self.data.id));
                 return true;
             }
         }
 
-        Log::debug(&format!("is_admin: user_id={} returning false", self.data.id));
         false
     }
 
-    pub fn kick(&self, reason: Option<&str>) {
+    pub async fn mute(&self, until_date: Option<i64>) -> bool {
+
+        if matches!(self.chat.data.kind, Some(ChatKind::Private)) {
+            return false;
+        }
+
+        use crate::integrations::telegram::types::RestrictType;
+        let params = RestrictType {
+            permissions: Some(serde_json::json!({
+                "can_send_messages": false,
+                "can_send_audios": false,
+                "can_send_documents": false,
+                "can_send_photos": false,
+                "can_send_videos": false,
+                "can_send_video_notes": false,
+                "can_send_voice_notes": false,
+                "can_send_polls": false,
+                "can_send_other_messages": false
+            })),
+            until_date,
+        };
+
+        self.api.restrict_chat_member(self.data.id, self.chat.data.id, Some(&params)).await.is_ok()
+    }
+
+    pub async fn warn(&self, reason: Option<&str>) {
+
+    }
+
+    pub async fn kick(&self, reason: Option<&str>) {
 
     }
 
@@ -41,7 +66,7 @@ impl User {
         self.api.ban_chat_member(self.data.id, self.chat.data.id, None).await.is_ok()
     }
 
-    pub fn tban(&self, time: u32, reason: Option<&str>) {
+    pub async fn tban(&self, time: u32, reason: Option<&str>) {
 
     }
 }

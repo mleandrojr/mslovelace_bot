@@ -6,7 +6,7 @@ use crate::utils::log::Log;
 #[derive(Clone)]
 pub struct Chat {
     api: TelegramApi,
-    pub data: ChatType,
+    pub data: ChatType
 }
 
 impl Chat {

@@ -1,6 +1,8 @@
 use crate::integrations::telegram::contexts::UpdateType;
 use crate::integrations::telegram::TelegramApi;
 use crate::integrations::telegram::types::MessageType;
+use crate::integrations::telegram::params::message::MessageParams;
+use crate::utils::log::Log;
 
 pub struct MentionType {
     pub username: String,
@@ -13,12 +15,14 @@ pub struct Message {
     pub data: MessageType,
     pub kind: UpdateType,
     pub mentions: Vec<MentionType>,
+    pub reply_to_message: Option<Box<Message>>
 }
 
 impl Message {
     pub(crate) fn new(api: TelegramApi, data: MessageType, kind: UpdateType) -> Self {
-        let mut msg = Self { api, data, kind, mentions: vec![] };
+        let mut msg = Self { api, data, kind, mentions: vec![], reply_to_message: None };
         msg.parse_entities();
+        msg.parse_reply_to_message();
         msg
     }
 
@@ -41,9 +45,22 @@ impl Message {
         Some(MentionType { username, offset, length })
     }
 
-    pub async fn reply(&self, text: &str) -> Result<(), reqwest::Error> {
-        self.api.reply_to(self.data.chat.id, self.data.message_id as u64, text, None).await?;
-        Ok(())
+    fn parse_reply_to_message(&mut self) {
+        if let Some(reply) = &self.data.reply_to_message {
+            self.reply_to_message = Some(Box::new(Message::new(self.api.clone(), (**reply).clone(), self.kind.clone())));
+        }
+    }
+
+    pub async fn reply(&self, text: &str, params: Option<MessageParams>) -> Result<Option<MessageType>, reqwest::Error> {
+        let response = self.api
+            .reply_to(self.data.chat.id, self.data.message_id as u64, text, params.as_ref())
+            .await?;
+
+        if (!response.ok) {
+            Log::save(&format!("{response:?}"), true);
+        }
+
+        Ok(response.result)
     }
 
     pub async fn delete(&self) -> Result<(), reqwest::Error> {
