@@ -42,7 +42,6 @@ pub async fn report(pool: &MySqlPool, ctx: &Context, chat: &Chat, message: &Mess
         }
     );
 
-
     send_message(target, text_reported.as_str()).await;
 }
 
